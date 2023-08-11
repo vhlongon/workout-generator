@@ -28,7 +28,7 @@ type Exercise = {
   reps: number[];
 };
 
-export const parseInput = (input: string): Exercise[] => {
+export const parsePrompt = (input: string): Exercise[] => {
   const lines = input.split('\n').slice(1); // remove header row
   const exercises: Exercise[] = [];
 
