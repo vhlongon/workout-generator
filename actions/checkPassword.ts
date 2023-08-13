@@ -1,11 +1,9 @@
 'use server';
 import { encode, isValidProtectPassword } from '@/helpers/protect';
-import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const checkPassword = async (e: FormData) => {
-  await sleep(1000);
   const password = e.get('password');
   if (typeof password !== 'string') {
     return;
