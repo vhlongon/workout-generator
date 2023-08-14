@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workouts  Workout[]
+}
+
+model Workout {
+  id        String      @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  exercises Exercise[]
+
+  @@unique([userId, name])
+  @@index([userId, id])
+}
+
+model Exercise {
+  id        String      @id @default(uuid())
+  name      String
+  sets      Int
+  reps      Int[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workoutId String
+  workout   Workout  @relation(fields: [workoutId], references: [id])
+
+  @@index([workoutId, id])
+}
+
+enum Target {
+  FULL_BODY
+  UPPER_BODY
+  LOWER_BODY
+  PUSH
+  PULL
+}
+
+enum Mode {
+  RESISTANCE
+  STRENGTH
+  HYPERTROPHY
+}
