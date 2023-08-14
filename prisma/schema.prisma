@@ -27,6 +27,8 @@ model Workout {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   exercises Exercise[]
+  target    Target
+  mode      Mode
 
   @@unique([userId, name])
   @@index([userId, id])

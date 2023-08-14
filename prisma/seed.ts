@@ -15,6 +15,8 @@ const createMockData = async (): Promise<User> => {
       workouts: {
         create: {
           name: 'Test Workout',
+          target: 'FULL_BODY',
+          mode: 'HYPERTROPHY',
           exercises: {
             create: [
               {
