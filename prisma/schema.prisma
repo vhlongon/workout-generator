@@ -11,21 +11,22 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   workouts  Workout[]
 }
 
 model Workout {
-  id        String      @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id String @id @default(uuid())
+
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
   exercises Exercise[]
   target    Target
   mode      Mode
@@ -35,7 +36,7 @@ model Workout {
 }
 
 model Exercise {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
   sets      Int
   reps      Int[]

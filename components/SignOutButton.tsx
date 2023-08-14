@@ -13,10 +13,7 @@ export const SignOutButton = () => {
       }}
     >
       <button>
-        <ArrowLeftOnRectangleIcon
-          title="Log out"
-          className="text-white h-6 w-6"
-        />
+        <ArrowLeftOnRectangleIcon title="Log out" className="h-6 w-6" />
       </button>
     </ClerkSignOutButton>
   );

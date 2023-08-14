@@ -1,11 +1,12 @@
 'use client';
 import { createWorkout } from '@/actions/createWorkout';
 import { getMediumValue } from '@/helpers/medium';
-import { slugify } from '@/helpers/slugify';
+import { deslugify, slugify } from '@/helpers/slugify';
 import { formatToTitleCase } from '@/helpers/toTitleCase';
 import { WorkoutFormData } from '@/types';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Mode, Target } from '@prisma/client';
-import { useId, useRef, useState, useTransition } from 'react';
+import { useEffect, useId, useRef, useState, useTransition } from 'react';
 
 export const CreateWorkoutForm = ({
   exercises,
@@ -16,12 +17,22 @@ export const CreateWorkoutForm = ({
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
+  const [confirmation, setConfirmation] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<WorkoutFormData>({
     exercises,
     mode,
     target,
   });
+
+  useEffect(() => {
+    if (confirmation) {
+      const timeoutId = setTimeout(() => {
+        setConfirmation(null);
+      }, 3000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [confirmation]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,9 +41,12 @@ export const CreateWorkoutForm = ({
       try {
         const data = await createWorkout(formData);
 
-        if (data?.error) {
+        if ('error' in data) {
           setError(data.error);
+          return;
         }
+
+        setConfirmation(`workout saved successfully!`);
       } catch (error) {
         setError((error as Error).message);
       }
@@ -43,151 +57,175 @@ export const CreateWorkoutForm = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    const [exerciseName, property] = name.split('-');
+    const [exerciseName, property] = name.split('_');
 
     if (name === 'mode' || name === 'target') {
       setFormData({ ...formData, [name]: value });
       return;
     }
-    const index = exercises.findIndex(
-      exercise => exercise.name === exerciseName
-    );
-    const updatedExercise = { ...formData.exercises[index], [property]: value };
-    const updatedExercises = [...formData.exercises];
-    updatedExercises[index] = updatedExercise;
+    const updatedExercises = formData.exercises.map(exercise => {
+      if (exercise.name.toLowerCase() === deslugify(exerciseName)) {
+        return { ...exercise, [property]: [Number(value)] };
+      }
+      return exercise;
+    });
+
     setFormData({ ...formData, exercises: updatedExercises });
   };
+
   return (
-    <form onSubmit={handleSubmit} id={id} ref={formRef}>
-      <div className="flex flex-col gap-4">
-        <table className="table" align="right">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Sets</th>
-              <th>Reps</th>
-            </tr>
-          </thead>
-          <tbody>
-            {formData.exercises.map((exercise, index) => {
-              const repsId = `${slugify(exercise.name)}-reps`;
-              const setsId = `${slugify(exercise.name)}-sets`;
-              const min = exercise.reps[0];
-              const max = exercise.reps[exercise.reps.length - 1];
-              const medium = getMediumValue(exercise.reps);
-              const isSingleValue = exercise.reps.length === 1;
-              return (
-                <tr key={exercise.name}>
-                  <th>{index + 1}</th>
-                  <td>
-                    <p className="font-bold flex-grow">{exercise.name}</p>
-                  </td>
-                  <td>
-                    <input
-                      className="input w-20 input-sm"
-                      type="number"
-                      name={setsId}
-                      id={setsId}
-                      required
-                      value={exercise.sets}
-                      onChange={handleInputChange}
-                    />
-                  </td>
+    <>
+      <h2 className="text-lg font-accent tracking-widest text-accent">
+        Create your own custom workout
+      </h2>
 
-                  <td>
-                    {isSingleValue ? (
-                      <div>
-                        <input
-                          className="input w-20 input-sm"
-                          type="number"
-                          name={repsId}
-                          id={repsId}
-                          required
-                          value={medium}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-secondary">{min}</span>
-                          <span className="text-sm text-secondary">{max}</span>
-                        </div>
-                        <input
-                          className="range input-"
-                          type="range"
-                          name={repsId}
-                          min={min}
-                          step={1}
-                          id={repsId}
-                          required
-                          max={max}
-                          value={medium}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div className="flex justify-between">
-          <div className="form-control">
-            <label className="label text-sm text text-gray-400" htmlFor="mode">
-              Mode
-            </label>
-            <select
-              className="select select-sm"
-              onChange={handleInputChange}
-              name="mode"
-              id="mode"
-            >
-              {Object.values(Mode).map(m => {
+      <form className="max-w-md" onSubmit={handleSubmit} id={id} ref={formRef}>
+        <div className="flex flex-col gap-4">
+          <table className="table" align="right">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+            </thead>
+            <tbody>
+              {exercises.map((exercise, index) => {
+                const isSingleValue = exercise.reps.length === 1;
+                const repsId = `${slugify(exercise.name)}_reps`;
+                const setsId = `${slugify(exercise.name)}_sets`;
+                const min = isSingleValue ? 6 : exercise.reps[0];
+                const max = exercise.reps[exercise.reps.length - 1];
+                const setsValue = formData.exercises[index].sets;
+                const repsValue = getMediumValue(
+                  formData.exercises[index].reps
+                );
+
                 return (
-                  <option key={m} selected={mode === m} value={m}>
-                    {formatToTitleCase(m)}
-                  </option>
+                  <tr key={exercise.name}>
+                    <td className="px-1">
+                      <input
+                        className="input input-sm w-40 flex-grow"
+                        type="text"
+                        value={exercise.name}
+                        onChange={handleInputChange}
+                      ></input>
+                    </td>
+                    <td>
+                      <input
+                        className="input w-14 input-sm"
+                        type="number"
+                        name={setsId}
+                        min={1}
+                        id={setsId}
+                        required
+                        value={setsValue}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+
+                    <td>
+                      <div className="flex justify-between px-2">
+                        <span className="text-sm text-secondary">{min}</span>
+                        <span className="text-sm text-secondary">{max}</span>
+                      </div>
+                      <input
+                        className="range w-16"
+                        type="range"
+                        name={repsId}
+                        min={min}
+                        step={1}
+                        id={repsId}
+                        required
+                        max={max}
+                        value={repsValue}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
                 );
               })}
-            </select>
-          </div>
+            </tbody>
+          </table>
+          <div className="flex justify-between">
+            <div className="form-control">
+              <label
+                className="label text-sm text text-gray-400"
+                htmlFor="mode"
+              >
+                Mode
+              </label>
+              <select
+                className="select select-sm"
+                onChange={handleInputChange}
+                name="mode"
+                id="mode"
+                value={formData.mode}
+              >
+                {Object.values(Mode).map(m => {
+                  return (
+                    <option key={m} value={m}>
+                      {formatToTitleCase(m)}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
 
-          <div className="form-control">
-            <label
-              className="label text-sm text text-gray-400"
-              htmlFor="target"
+            <div className="form-control">
+              <label
+                className="label text-sm text text-gray-400"
+                htmlFor="target"
+              >
+                Target
+              </label>
+              <select
+                className="select select-sm"
+                onChange={handleInputChange}
+                name="target"
+                id="target"
+                value={formData.target}
+              >
+                {Object.values(Target).map(t => {
+                  return (
+                    <option key={t} value={t}>
+                      {formatToTitleCase(t)}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+          <div className="flex w-full flex-col gap-2 justify-center">
+            <button
+              className="btn btn-accent w-1/2 mx-auto mt-2"
+              type="submit"
+              disabled={isPending}
             >
-              Target
-            </label>
-            <select
-              className="select select-sm"
-              onChange={handleInputChange}
-              name="target"
-            >
-              {Object.values(Target).map(t => {
-                return (
-                  <option key={t} selected={target === t} value={t}>
-                    {formatToTitleCase(t)}
-                  </option>
-                );
-              })}
-            </select>
+              {isPending ? 'Creating workout...' : 'Create workout'}
+            </button>
+            {error && !isPending && (
+              <div className="alert alert-error">
+                <details>
+                  <summary className="flex gap-2 items-center cursor-pointer">
+                    <XCircleIcon className="h-6 w-6" />
+                    Something went wrong ▾
+                  </summary>
+                  <pre className="text-xs whitespace-pre-wrap">{error}</pre>
+                </details>
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex w-full justify-center">
-          {error && !isPending && (
-            <p className="text-sm text-red-600" role="alert">
-              {error}
-            </p>
-          )}
-          <button className="btn btn-accent" type="submit" disabled={isPending}>
-            {isPending ? 'Creating workout...' : 'Create workout'}
-          </button>
-        </div>
-      </div>
-    </form>
+        {confirmation && (
+          <div className="toaster mt-4 text-center">
+            <div className="alert alert-info text-sm w-full">
+              <CheckCircleIcon className="h-6 w-6" />
+              <span>{confirmation}</span>
+            </div>
+          </div>
+        )}
+      </form>
+    </>
   );
 };

@@ -1,0 +1,4 @@
+import { Inter, Ultra } from 'next/font/google';
+
+export const inter = Inter({ subsets: ['latin'] });
+export const ultra = Ultra({ subsets: ['latin'], weight: '400' });
