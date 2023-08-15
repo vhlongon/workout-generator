@@ -19,9 +19,7 @@ export const checkPassword = async (e: FormData) => {
 
   cookies().set('protect-password', encode(password), {
     httpOnly: true,
-    path: '/',
     maxAge: 999999,
-    secure: true,
   });
 
   redirect('/home');

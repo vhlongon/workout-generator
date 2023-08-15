@@ -21,7 +21,7 @@ export const ProtectForm = () => {
     });
   };
   return (
-    <form action={action} className="flex flex-col gap-4" method="post" id={id}>
+    <form action={action} className="flex flex-col gap-4" id={id}>
       <div className="form-control w-full max-w-xs">
         <input
           type="password"
