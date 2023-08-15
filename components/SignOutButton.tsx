@@ -12,9 +12,9 @@ export const SignOutButton = () => {
         router.push('/sign-in');
       }}
     >
-      <button>
-        <ArrowLeftOnRectangleIcon title="Log out" className="h-6 w-6" />
-      </button>
+      <div className="tooltip tooltip-bottom" data-tip="Log out">
+        <ArrowLeftOnRectangleIcon className="h-4 w-4" />
+      </div>
     </ClerkSignOutButton>
   );
 };

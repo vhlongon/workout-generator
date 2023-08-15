@@ -21,13 +21,13 @@ export const ProtectForm = () => {
     });
   };
   return (
-    <form action={action} method="post" id={id}>
-      <div className="flex flex-col">
-        <label htmlFor="password">Enter password</label>
+    <form action={action} className="flex flex-col gap-4" method="post" id={id}>
+      <div className="form-control w-full max-w-xs">
         <input
           type="password"
           name="password"
           id="password"
+          className="input input-bordered w-full max-w-xs"
           placeholder="Enter password"
           required
         />
@@ -37,7 +37,12 @@ export const ProtectForm = () => {
           {error}
         </p>
       )}
-      <button type="submit" aria-busy={isPending} disabled={isPending}>
+      <button
+        type="submit"
+        className="btn btn-accent"
+        aria-busy={isPending}
+        disabled={isPending}
+      >
         {isPending ? 'Loading' : 'Submit'}
       </button>
     </form>
