@@ -1,15 +1,7 @@
-type Target =
-  | 'full body'
-  | 'upper body'
-  | 'lower body'
-  | 'push'
-  | 'pull'
-  | (string & {});
-
-type Mode = 'resistance' | 'strength' | 'hypertrophy';
+import { Mode, Target } from '@prisma/client';
 
 export const generateWorkoutPrompt = (
-  target: Target,
+  target: Target & (string & {}),
   totalSets: number,
   mode: Mode
 ): string => {
