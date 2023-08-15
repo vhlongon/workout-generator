@@ -1,5 +1,6 @@
 'use client';
 import { checkPassword } from '@/actions/checkPassword';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 import { useId, useState, useTransition } from 'react';
 
 export const ProtectForm = () => {
@@ -32,11 +33,6 @@ export const ProtectForm = () => {
           required
         />
       </div>
-      {error && !isPending && (
-        <p className="text-sm text-red-600" role="alert">
-          {error}
-        </p>
-      )}
       <button
         type="submit"
         className="btn btn-accent"
@@ -45,6 +41,12 @@ export const ProtectForm = () => {
       >
         {isPending ? 'Loading' : 'Submit'}
       </button>
+      {error && !isPending && (
+        <div className="alert alert-error">
+          <XCircleIcon className="h-6 w-6" />
+          <pre className="text-xs whitespace-pre-wrap">{error}</pre>
+        </div>
+      )}
     </form>
   );
 };
