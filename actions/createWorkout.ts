@@ -23,10 +23,11 @@ export const createWorkout = async (data: WorkoutFormData) => {
     };
   }
 
-  const workoutName = ('name' in data ? data.name : 'New Workout') as string;
-
   const email = authUser.emailAddresses[0].emailAddress;
-  const name = getUserName(authUser);
+  const username = getUserName(authUser);
+
+  const workoutTitle = ('name' in data ? data.name : 'New Workout') as string;
+  const workoutName = `${username}'s ${workoutTitle}`;
 
   try {
     // check if there is a user with the same email
@@ -37,11 +38,11 @@ export const createWorkout = async (data: WorkoutFormData) => {
         email,
       },
       update: {
-        name,
+        name: username,
       },
       create: {
         email,
-        name,
+        name: username,
       },
     });
 

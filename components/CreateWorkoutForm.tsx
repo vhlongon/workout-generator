@@ -75,7 +75,7 @@ export const CreateWorkoutForm = ({
 
   return (
     <>
-      <h2 className="text-lg font-accent tracking-widest text-accent">
+      <h2 className="text-lg font-accent tracking-widest text-accent text-center mb-2">
         Create your own custom workout
       </h2>
 
