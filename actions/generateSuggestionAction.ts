@@ -1,16 +1,10 @@
 'use server';
 
-import {
-  generateWorkoutPrompt,
-  getWorkoutSuggestion,
-  parsePrompt,
-} from '@/helpers/openai';
-import { WorkoutSuggestionFormData } from '@/types';
+import { getWorkoutSuggestion } from '@/helpers/prompt';
+import { SuggestionFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 
-export const generateSuggestionAction = async (
-  input: WorkoutSuggestionFormData
-) => {
+export const generateSuggestionAction = async (input: SuggestionFormData) => {
   const authUser = await currentUser();
 
   try {
@@ -19,8 +13,7 @@ export const generateSuggestionAction = async (
         error: 'Password is not valid',
       };
     }
-    const prompt = generateWorkoutPrompt(input);
-    const suggestion = await getWorkoutSuggestion(prompt);
+    const suggestion = await getWorkoutSuggestion(input);
 
     if (!suggestion) {
       return {
@@ -28,9 +21,7 @@ export const generateSuggestionAction = async (
       };
     }
 
-    const parsedData = parsePrompt(suggestion);
-
-    return parsedData;
+    return suggestion;
   } catch (error) {
     return {
       error: (error as Error).message,

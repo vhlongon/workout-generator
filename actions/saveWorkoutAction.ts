@@ -1,18 +1,10 @@
 'use server';
 
+import { getUserNameOrId } from '@/helpers/data';
 import { db } from '@/prisma/client';
 import { WorkoutFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
-import { User } from '@clerk/nextjs/server';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-
-const getUserName = (user: User) => {
-  return (
-    user.username ||
-    `${user.firstName} ${user.lastName}` ||
-    user.emailAddresses[0].emailAddress
-  );
-};
 
 const sanitizeInput = (input: string) => input.replace(/[^a-zA-Z0-9 ]/g, '');
 
@@ -26,7 +18,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
   }
 
   const email = authUser.emailAddresses[0].emailAddress;
-  const username = getUserName(authUser);
+  const username = getUserNameOrId(authUser);
 
   const workoutTitle = ('name' in data ? data.name : 'New Workout') as string;
   const workoutName = `${username}'s ${workoutTitle}`;

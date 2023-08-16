@@ -1,22 +1,7 @@
+import { getUserNameOrId } from '@/helpers/data';
 import { currentUser } from '@clerk/nextjs';
-import { User } from '@clerk/nextjs/server';
 import Link from 'next/link';
 
-const getUserName = (user: User) => {
-  if (user.username) {
-    return user.username;
-  }
-
-  if (user.firstName && user.lastName) {
-    return `${user.firstName} ${user.lastName}`;
-  }
-
-  if (user.firstName) {
-    return user.firstName;
-  }
-
-  return user.id;
-};
 const Homepage = async () => {
   const user = await currentUser();
 
@@ -25,7 +10,7 @@ const Homepage = async () => {
       {user ? (
         <h2 className="text-lg font-semibold">
           Welcome back{' '}
-          <span className="text-secondary">{getUserName(user)}</span>!
+          <span className="text-secondary">{getUserNameOrId(user)}</span>!
         </h2>
       ) : (
         <div className="flex flex-col items-center gap-2 text-lg">

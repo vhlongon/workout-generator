@@ -1,4 +1,4 @@
-import { WorkoutSuggestionFormData } from '@/types';
+import { SuggestionFormData } from '@/types';
 import { Exercise } from '@prisma/client';
 import { Configuration, OpenAIApi } from 'openai';
 
@@ -8,7 +8,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export const getWorkoutSuggestion = async (content: string) => {
+const getAiResponse = async (content: string) => {
   const chatCompletion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages: [{ role: 'assistant', content }],
@@ -34,11 +34,11 @@ const getNotes = (input: string) => {
   return '';
 };
 
-export const generateWorkoutPrompt = ({
+const generateWorkoutPrompt = ({
   mode,
   target,
   totalSets,
-}: WorkoutSuggestionFormData): string => {
+}: SuggestionFormData): string => {
   if (!target) {
     throw new Error('Specific muscle group is required');
   }
@@ -50,7 +50,7 @@ export const generateWorkoutPrompt = ({
 
 type ExerciseData = Pick<Exercise, 'name' | 'sets' | 'reps'>;
 
-export const parsePrompt = (
+const parsePrompt = (
   input: string
 ): { exercises: ExerciseData[]; notes?: string } => {
   const lines = input.trim().split('\n');
@@ -77,4 +77,17 @@ export const parsePrompt = (
     exercises: exerciseData,
     notes,
   };
+};
+
+export const getWorkoutSuggestion = async (input: SuggestionFormData) => {
+  const prompt = generateWorkoutPrompt(input);
+  const suggestion = await getAiResponse(prompt);
+
+  if (!suggestion) {
+    return;
+  }
+
+  const parsedData = parsePrompt(suggestion);
+
+  return parsedData;
 };

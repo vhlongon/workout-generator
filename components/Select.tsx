@@ -9,6 +9,7 @@ type SelectProps = {
   options: { name: string; value: string }[];
   value: string;
 };
+
 export const Select = ({ onChange, id, name, options, value }: SelectProps) => {
   return (
     <select

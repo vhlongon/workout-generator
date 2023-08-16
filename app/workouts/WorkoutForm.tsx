@@ -1,40 +1,43 @@
 'use client';
 import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
-import { getMediumValue } from '@/helpers/medium';
-import { deslugify, slugify } from '@/helpers/slugify';
-import { formatToTitleCase } from '@/helpers/toTitleCase';
-import { WorkoutFormData } from '@/types';
+import { Select } from '@/components/Select';
+import { deslugify, formatOptions, slugify } from '@/helpers/format';
+import { getMediumValue } from '@/helpers/value';
+import { FormProps, WorkoutFormData } from '@/types';
 import { Mode, Target } from '@prisma/client';
 import { useId, useState, useTransition } from 'react';
-import { ErrorMessage } from './ErrorMessage';
-import { Select } from './Select';
 
-type SaveWorkoutData = {
-  data: WorkoutFormData;
-  onSaved?: () => void;
-};
+type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
 
-export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
+export const WorkoutForm = ({
+  initialValues,
+  onCompleted,
+  onError,
+  onSuccess,
+  onSubmitStart,
+  buttonText,
+}: WorkoutFormProps) => {
   const id = useId();
-  const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
-  const [formData, setFormData] = useState<WorkoutFormData>(data);
+  const [formData, setFormData] = useState<WorkoutFormData>(initialValues);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    onSubmitStart?.();
     startTransition(async () => {
       try {
         const data = await saveWorkoutAction(formData);
 
         if ('error' in data) {
-          setError(data.error);
+          onError?.(data.error);
           return;
         }
 
-        onSaved?.();
+        onSuccess?.({ ...data, ...formData });
       } catch (error) {
-        setError((error as Error).message);
+        onError?.((error as Error).message);
+      } finally {
+        onCompleted?.();
       }
     });
   };
@@ -78,7 +81,7 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
               </tr>
             </thead>
             <tbody>
-              {data.exercises.map((exercise, index) => {
+              {initialValues.exercises.map((exercise, index) => {
                 const isSingleValue = exercise.reps.length === 1;
                 const repsId = `${slugify(exercise.name)}_reps`;
                 const setsId = `${slugify(exercise.name)}_sets`;
@@ -143,10 +146,7 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
                 name="mode"
                 id="mode"
                 value={formData.mode}
-                options={Object.values(Mode).map(m => ({
-                  name: formatToTitleCase(m),
-                  value: m,
-                }))}
+                options={formatOptions(Mode)}
               ></Select>
             </div>
 
@@ -162,10 +162,7 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
                 name="target"
                 id="target"
                 value={formData.target}
-                options={Object.values(Target).map(t => ({
-                  name: formatToTitleCase(t),
-                  value: t,
-                }))}
+                options={formatOptions(Target)}
               ></Select>
             </div>
           </div>
@@ -178,7 +175,7 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
               name="notes"
               id="notes"
               placeholder="add some notes"
-              value={formData.notes}
+              value={formData.notes ?? ''}
               onChange={handleInputChange}
             />
           </div>
@@ -195,7 +192,7 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
                   loading
                 </>
               ) : (
-                <span>Save workout</span>
+                <span>{buttonText}</span>
               )}
             </button>
             {isPending && (
@@ -203,7 +200,6 @@ export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
                 Saving workout...
               </span>
             )}
-            {error && !isPending && <ErrorMessage>{error}</ErrorMessage>}
           </div>
         </div>
       </form>
