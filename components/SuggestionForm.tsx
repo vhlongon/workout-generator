@@ -1,5 +1,5 @@
 'use client';
-import { generateWorkoutSuggestion } from '@/actions/generateWorkoutSuggestion';
+import { generateSuggestionAction } from '@/actions/generateSuggestionAction';
 import { formatToTitleCase } from '@/helpers/toTitleCase';
 import { WorkoutFormData, WorkoutSuggestionFormData } from '@/types';
 import { Mode, Target } from '@prisma/client';
@@ -10,7 +10,7 @@ import React, {
   useState,
   useTransition,
 } from 'react';
-import { SaveWorkoutForm } from './SaveWorkoutForm';
+import { WorkoutForm } from './WorkoutForm';
 import { ErrorMessage } from './ErrorMessage';
 import { Select } from './Select';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
@@ -27,7 +27,7 @@ const getRandomLoadingPhrase = () => {
   return loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
 };
 
-export const SuggestWorkoutForm = () => {
+export const SuggestionForm = () => {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
   const [confirmation, setConfirmation] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export const SuggestWorkoutForm = () => {
     setWorkoutFormData(null);
     startTransition(async () => {
       try {
-        const data = await generateWorkoutSuggestion(suggestionFormData);
+        const data = await generateSuggestionAction(suggestionFormData);
 
         if (!data) {
           setError('Something went wrong. Please try again later.');
@@ -89,6 +89,10 @@ export const SuggestWorkoutForm = () => {
 
   return (
     <div>
+      <p className="text-lg font-accent tracking-widest text-accent text-center mb-2">
+        Get a workout suggestion
+      </p>
+
       <form
         className="max-w-md min-w-[300px] w-full flex flex-col gap-2"
         onSubmit={handleSubmit}
@@ -131,7 +135,7 @@ export const SuggestWorkoutForm = () => {
             Target
           </label>
           <input
-            className="mx-auto input w-14 input-sm"
+            className="input w-14 input-sm input-bordered"
             type="number"
             name="totalSets"
             min={1}
@@ -153,7 +157,7 @@ export const SuggestWorkoutForm = () => {
                 loading
               </>
             ) : (
-              <span>{error ? 'try again' : 'Suggest a workout'}</span>
+              <span>{error ? 'try again' : 'Suggest'}</span>
             )}
           </button>
           {isPending && (
@@ -170,7 +174,7 @@ export const SuggestWorkoutForm = () => {
           <div className="my-4">
             <div className="divider"></div>
           </div>
-          <SaveWorkoutForm
+          <WorkoutForm
             data={workoutFormData}
             onSaved={() => {
               setConfirmation('Workout saved!');

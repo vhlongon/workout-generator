@@ -1,5 +1,5 @@
 'use client';
-import { createWorkout } from '@/actions/createWorkout';
+import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
 import { getMediumValue } from '@/helpers/medium';
 import { deslugify, slugify } from '@/helpers/slugify';
 import { formatToTitleCase } from '@/helpers/toTitleCase';
@@ -13,7 +13,8 @@ type SaveWorkoutData = {
   data: WorkoutFormData;
   onSaved?: () => void;
 };
-export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
+
+export const WorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
   const id = useId();
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -24,7 +25,7 @@ export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
     setError('');
     startTransition(async () => {
       try {
-        const data = await createWorkout(formData);
+        const data = await saveWorkoutAction(formData);
 
         if ('error' in data) {
           setError(data.error);
@@ -61,12 +62,12 @@ export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
   };
 
   return (
-    <>
-      <h2 className="text-lg font-accent tracking-widest text-accent text-center mb-2">
-        Customize your workout
-      </h2>
+    <div className="max-w-sm">
+      <p className="text-lg font-accent tracking-widest text-accent text-center mb-2">
+        Customize or save your workout as is
+      </p>
 
-      <form className="max-w-md" onSubmit={handleSubmit} id={id}>
+      <form onSubmit={handleSubmit} id={id}>
         <div className="flex flex-col gap-4">
           <table className="table" align="right">
             <thead>
@@ -95,7 +96,7 @@ export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
                     </td>
                     <td>
                       <input
-                        className="input w-14 input-sm"
+                        className="input w-14 input-sm input-bordered"
                         type="number"
                         name={setsId}
                         min={1}
@@ -173,7 +174,7 @@ export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
               Notes
             </label>
             <textarea
-              className="textarea w-full min-h-[100px]"
+              className="textarea textarea-bordered w-full min-h-[100px]"
               name="notes"
               id="notes"
               placeholder="add some notes"
@@ -206,6 +207,6 @@ export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };

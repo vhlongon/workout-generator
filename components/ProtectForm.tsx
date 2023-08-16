@@ -1,5 +1,5 @@
 'use client';
-import { checkPassword } from '@/actions/checkPassword';
+import { checkPasswordAction } from '@/actions/checkPasswordAction';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { useId, useState, useTransition } from 'react';
 
@@ -12,7 +12,7 @@ export const ProtectForm = () => {
     setError('');
     startTransition(async () => {
       try {
-        const data = await checkPassword(e);
+        const data = await checkPasswordAction(e);
         if (data?.error) {
           setError(data.error);
         }

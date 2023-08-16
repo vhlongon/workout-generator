@@ -12,7 +12,7 @@ type SelectProps = {
 export const Select = ({ onChange, id, name, options, value }: SelectProps) => {
   return (
     <select
-      className="select select-sm"
+      className="select select-sm select-bordered"
       onChange={onChange}
       name={name}
       id={id}

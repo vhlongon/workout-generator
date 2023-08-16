@@ -3,7 +3,7 @@ import { encode, isValidProtectPassword } from '@/helpers/protect';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-export const checkPassword = async (e: FormData) => {
+export const checkPasswordAction = async (e: FormData) => {
   const password = e.get('password');
   if (typeof password !== 'string') {
     return;

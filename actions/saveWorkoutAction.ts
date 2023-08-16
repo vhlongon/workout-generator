@@ -14,7 +14,9 @@ const getUserName = (user: User) => {
   );
 };
 
-export const createWorkout = async (data: WorkoutFormData) => {
+const sanitizeInput = (input: string) => input.replace(/[^a-zA-Z0-9 ]/g, '');
+
+export const saveWorkoutAction = async (data: WorkoutFormData) => {
   const authUser = await currentUser();
 
   if (!authUser) {
@@ -53,7 +55,7 @@ export const createWorkout = async (data: WorkoutFormData) => {
     const basePayload = {
       mode: data.mode,
       name: workoutName,
-      notes: data.notes,
+      notes: sanitizeInput(data.notes ?? ''),
       target: data.target,
     };
 

@@ -8,7 +8,7 @@ import {
 import { WorkoutSuggestionFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 
-export const generateWorkoutSuggestion = async (
+export const generateSuggestionAction = async (
   input: WorkoutSuggestionFormData
 ) => {
   const authUser = await currentUser();
