@@ -1,26 +1,44 @@
 import { WorkoutCard } from '@/components/WorkoutCard';
 import { getWorkoutName } from '@/helpers/value';
 import { db } from '@/prisma/client';
+import { currentUser } from '@clerk/nextjs';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
 export const revalidate = 0;
 
-const getWorkouts = async () => {
-  const workouts = await db.workout.findMany({
-    include: {
-      exercises: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+const getUserWorkouts = async () => {
+  try {
+    const authUser = await currentUser();
 
-  return workouts;
+    if (!authUser) {
+      return [];
+    }
+
+    const email = authUser.emailAddresses[0].emailAddress;
+
+    const workouts = await db.workout.findMany({
+      include: {
+        exercises: true,
+      },
+      where: {
+        user: {
+          email,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return workouts;
+  } catch (error) {
+    return [];
+  }
 };
 
 const WorkoutsPage = async () => {
-  const workouts = await getWorkouts();
+  const workouts = await getUserWorkouts();
 
   return (
     <div className="w-full max-w-7xl mx-auto flex justify-center items-center">
