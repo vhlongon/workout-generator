@@ -9,7 +9,7 @@ export const SignOutButton = () => {
   return (
     <ClerkSignOutButton
       signOutCallback={() => {
-        router.push('/sign-in');
+        router.push('/home');
       }}
     >
       <div className="tooltip tooltip-bottom" data-tip="Log out">
