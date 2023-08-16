@@ -50,24 +50,27 @@ export const createWorkout = async (data: WorkoutFormData) => {
     // if so replace all the data with the new data
     // otherwise create a new workout
 
+    const basePayload = {
+      mode: data.mode,
+      name: workoutName,
+      notes: data.notes,
+      target: data.target,
+    };
+
     const workout = await db.workout.upsert({
       where: {
         name: workoutName,
         userId: user.id,
       },
       update: {
-        mode: data.mode,
-        name: workoutName,
-        target: data.target,
+        ...basePayload,
         exercises: {
           deleteMany: {},
           create: data.exercises,
         },
       },
       create: {
-        mode: data.mode,
-        name: workoutName,
-        target: data.target,
+        ...basePayload,
         user: {
           connect: {
             id: user.id,

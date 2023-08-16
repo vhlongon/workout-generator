@@ -42,7 +42,7 @@ export default function RootLayout({
         >
           <div className="flex min-h-[100dvh] flex-col">
             <Header />
-            <main className={'flex w-full flex-grow'}>{children}</main>
+            <main className="flex w-full flex-grow p-4">{children}</main>
           </div>
         </body>
       </ClerkProvider>

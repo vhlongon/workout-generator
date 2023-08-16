@@ -4,37 +4,20 @@ import { getMediumValue } from '@/helpers/medium';
 import { deslugify, slugify } from '@/helpers/slugify';
 import { formatToTitleCase } from '@/helpers/toTitleCase';
 import { WorkoutFormData } from '@/types';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Mode, Target } from '@prisma/client';
-import { useEffect, useId, useRef, useState, useTransition } from 'react';
+import { useId, useState, useTransition } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 import { Select } from './Select';
 
-export const CreateWorkoutForm = ({
-  exercises,
-  mode,
-  target,
-}: WorkoutFormData) => {
+type SaveWorkoutData = {
+  data: WorkoutFormData;
+  onSaved?: () => void;
+};
+export const SaveWorkoutForm = ({ data, onSaved }: SaveWorkoutData) => {
   const id = useId();
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
-  const formRef = useRef<HTMLFormElement>(null);
-  const [confirmation, setConfirmation] = useState<string | null>(null);
-
-  const [formData, setFormData] = useState<WorkoutFormData>({
-    exercises,
-    mode,
-    target,
-  });
-
-  useEffect(() => {
-    if (confirmation) {
-      const timeoutId = setTimeout(() => {
-        setConfirmation(null);
-      }, 3000);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [confirmation]);
+  const [formData, setFormData] = useState<WorkoutFormData>(data);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +31,7 @@ export const CreateWorkoutForm = ({
           return;
         }
 
-        setConfirmation(`workout saved successfully!`);
+        onSaved?.();
       } catch (error) {
         setError((error as Error).message);
       }
@@ -56,12 +39,14 @@ export const CreateWorkoutForm = ({
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     const [exerciseName, property] = name.split('_');
 
-    if (name === 'mode' || name === 'target') {
+    if (name === 'mode' || name === 'target' || name === 'notes') {
       setFormData({ ...formData, [name]: value });
       return;
     }
@@ -78,10 +63,10 @@ export const CreateWorkoutForm = ({
   return (
     <>
       <h2 className="text-lg font-accent tracking-widest text-accent text-center mb-2">
-        Create your own custom workout
+        Customize your workout
       </h2>
 
-      <form className="max-w-md" onSubmit={handleSubmit} id={id} ref={formRef}>
+      <form className="max-w-md" onSubmit={handleSubmit} id={id}>
         <div className="flex flex-col gap-4">
           <table className="table" align="right">
             <thead>
@@ -92,7 +77,7 @@ export const CreateWorkoutForm = ({
               </tr>
             </thead>
             <tbody>
-              {exercises.map((exercise, index) => {
+              {data.exercises.map((exercise, index) => {
                 const isSingleValue = exercise.reps.length === 1;
                 const repsId = `${slugify(exercise.name)}_reps`;
                 const setsId = `${slugify(exercise.name)}_sets`;
@@ -105,13 +90,8 @@ export const CreateWorkoutForm = ({
 
                 return (
                   <tr key={exercise.name}>
-                    <td className="px-1">
-                      <input
-                        className="input input-sm w-40 flex-grow"
-                        type="text"
-                        value={exercise.name}
-                        onChange={handleInputChange}
-                      ></input>
+                    <td>
+                      <span className="w-40 flex-grow">{exercise.name}</span>
                     </td>
                     <td>
                       <input
@@ -188,25 +168,43 @@ export const CreateWorkoutForm = ({
               ></Select>
             </div>
           </div>
+          <div className="form-control">
+            <label className="label text-sm text text-gray-400" htmlFor="name">
+              Notes
+            </label>
+            <textarea
+              className="textarea w-full min-h-[100px]"
+              name="notes"
+              id="notes"
+              placeholder="add some notes"
+              value={formData.notes}
+              onChange={handleInputChange}
+            />
+          </div>
+
           <div className="flex w-full flex-col gap-2 justify-center">
             <button
-              className="btn btn-accent w-1/2 mx-auto mt-2"
+              className="btn btn-accent btn-sm mx-auto mt-2"
               type="submit"
               disabled={isPending}
             >
-              {isPending ? 'Creating workout...' : 'Create workout'}
+              {isPending ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  loading
+                </>
+              ) : (
+                <span>Save workout</span>
+              )}
             </button>
+            {isPending && (
+              <span className="text-xs text-center text-secondary">
+                Saving workout...
+              </span>
+            )}
             {error && !isPending && <ErrorMessage>{error}</ErrorMessage>}
           </div>
         </div>
-        {confirmation && (
-          <div className="toaster mt-4 text-center">
-            <div className="alert alert-info text-sm w-full">
-              <CheckCircleIcon className="h-6 w-6" />
-              <span>{confirmation}</span>
-            </div>
-          </div>
-        )}
       </form>
     </>
   );
