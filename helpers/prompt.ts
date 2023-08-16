@@ -83,7 +83,6 @@ const parsePrompt = (
 export const getWorkoutSuggestion = async (input: SuggestionFormData) => {
   const prompt = generateWorkoutPrompt(input);
   const suggestion = await getAiResponse(prompt);
-  console.log('🚀 ~ suggestion:', suggestion);
 
   if (!suggestion) {
     return;

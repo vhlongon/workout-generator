@@ -9,16 +9,16 @@ export type FormProps<InitValues, SuccessData> = {
   buttonText: string;
 };
 
-export type WorkoutFormData = {
-  exercises: Pick<Exercise, 'name' | 'sets' | 'reps'>[];
+type BaseFormData = {
   mode: Mode;
   target: Target;
   notes?: string | null;
+  title?: string;
+};
+export type WorkoutFormData = BaseFormData & {
+  exercises: Pick<Exercise, 'name' | 'sets' | 'reps'>[];
 };
 
-export type SuggestionFormData = {
-  mode: Mode;
-  target: Target;
+export type SuggestionFormData = BaseFormData & {
   totalSets: number;
-  notes?: string | null;
 };

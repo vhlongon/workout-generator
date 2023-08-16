@@ -50,10 +50,11 @@ export const WorkoutForm = ({
     const { name, value } = e.target;
     const [exerciseName, property] = name.split('_');
 
-    if (name === 'mode' || name === 'target' || name === 'notes') {
+    if (name !== 'exercises') {
       setFormData({ ...formData, [name]: value });
       return;
     }
+
     const updatedExercises = formData.exercises.map(exercise => {
       if (exercise.name.toLowerCase() === deslugify(exerciseName)) {
         return { ...exercise, [property]: [Number(value)] };
@@ -99,7 +100,7 @@ export const WorkoutForm = ({
                     </td>
                     <td>
                       <input
-                        className="input w-14 input-sm input-bordered"
+                        className="input w-16 input-sm input-bordered"
                         type="number"
                         name={setsId}
                         min={1}

@@ -29,8 +29,6 @@ export const SuggestionForm = ({
     setFormData({ ...formData, [name]: value });
   };
 
-  console;
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmitStart?.();
@@ -64,6 +62,25 @@ export const SuggestionForm = ({
         id={id}
       >
         <div className="form-control">
+          <label className="label text-sm text text-gray-400" htmlFor="title">
+            Give a unique title to your workout
+          </label>
+          <input
+            className="input input-sm input-bordered"
+            type="text"
+            name="title"
+            id="title"
+            value={formData.title}
+            onChange={handleInputChange}
+          />
+          <label className="label">
+            <span className="label-text-alt text-gray-400">
+              if not provided the name will be mode + target and will update an
+              existing workout if it exists
+            </span>
+          </label>
+        </div>
+        <div className="form-control">
           <label className="label text-sm text text-gray-400" htmlFor="mode">
             Mode
           </label>
@@ -94,7 +111,7 @@ export const SuggestionForm = ({
             Target
           </label>
           <input
-            className="input w-14 input-sm input-bordered"
+            className="input w-16 input-sm input-bordered"
             type="number"
             name="totalSets"
             min={1}

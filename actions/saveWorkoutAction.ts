@@ -20,7 +20,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
   const email = authUser.emailAddresses[0].emailAddress;
   const username = getUserNameOrId(authUser);
 
-  const workoutTitle = ('name' in data ? data.name : 'New Workout') as string;
+  const workoutTitle = data?.title ?? `${data.mode}-${data.target}`;
   const workoutName = `${username}'s ${workoutTitle}`;
 
   try {

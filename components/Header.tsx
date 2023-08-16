@@ -1,6 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs';
 import {
   Cog6ToothIcon,
+  DocumentPlusIcon,
   DocumentTextIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
@@ -40,6 +41,11 @@ export const Header = async () => {
             <li>
               <NavLink href="/home" title="Home">
                 <HomeIcon className="w-4 h-4" />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink href="/create" title="Create workout">
+                <DocumentPlusIcon className="w-4 h-4" />
               </NavLink>
             </li>
             <li>

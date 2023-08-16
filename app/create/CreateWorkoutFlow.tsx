@@ -1,6 +1,6 @@
 'use client';
 import { ErrorMessage } from '@/components/ErrorMessage';
-import { SuggestionForm } from '@/app/workouts/SuggestionForm';
+import { SuggestionForm } from '@/app/create/SuggestionForm';
 import { WorkoutForm } from './WorkoutForm';
 import { SuggestionFormData, WorkoutFormData } from '@/types';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
