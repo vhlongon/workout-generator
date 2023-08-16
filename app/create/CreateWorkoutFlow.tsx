@@ -1,12 +1,13 @@
 'use client';
-import { ErrorMessage } from '@/components/ErrorMessage';
 import { SuggestionForm } from '@/app/create/SuggestionForm';
-import { WorkoutForm } from './WorkoutForm';
-import { SuggestionFormData, WorkoutFormData } from '@/types';
+import { ErrorMessage } from '@/components/ErrorMessage';
+import { WorkoutFormData } from '@/types';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Mode, Target } from '@prisma/client';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { WorkoutForm } from './WorkoutForm';
 
 const getFadeInClass = (isLoading: boolean) => {
   return twMerge(
@@ -19,14 +20,15 @@ export const CreateWorkoutFlow = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
-  const [suggestionFormData, setSuggestionFormData] =
-    useState<SuggestionFormData>({
-      mode: Mode.HYPERTROPHY,
-      target: Target.FULL_BODY,
-      totalSets: 12,
-    });
+  const suggestionFormData = {
+    mode: Mode.HYPERTROPHY,
+    target: Target.FULL_BODY,
+    totalSets: 12,
+  };
   const [workoutFormData, setWorkoutFormData] =
     useState<WorkoutFormData | null>();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (confirmation) {
@@ -36,14 +38,6 @@ export const CreateWorkoutFlow = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [confirmation]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-
-    setSuggestionFormData({ ...suggestionFormData, [name]: value });
-  };
 
   const onSuggestionStart = () => {
     setIsLoading(true);
@@ -67,6 +61,7 @@ export const CreateWorkoutFlow = () => {
   const onSaveWorkoutSuccess = () => {
     setConfirmation('Workout saved!');
     setWorkoutFormData(null);
+    router.refresh();
   };
 
   return (

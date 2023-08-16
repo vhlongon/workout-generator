@@ -21,7 +21,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
   const username = getUserNameOrId(authUser);
 
   const workoutTitle = data?.title ?? `${data.mode}-${data.target}`;
-  const workoutName = `${username}'s ${workoutTitle}`;
+  const workoutName = `${username}'::${workoutTitle}`;
 
   try {
     // check if there is a user with the same email
@@ -49,6 +49,9 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
       name: workoutName,
       notes: sanitizeInput(data.notes ?? ''),
       target: data.target,
+      exercises: {
+        create: data.exercises,
+      },
     };
 
     const workout = await db.workout.upsert({
@@ -58,10 +61,6 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
       },
       update: {
         ...basePayload,
-        exercises: {
-          deleteMany: {},
-          create: data.exercises,
-        },
       },
       create: {
         ...basePayload,

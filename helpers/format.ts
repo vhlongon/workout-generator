@@ -24,3 +24,12 @@ export const formatOptions = (options: Record<string, string>) => {
     value: m,
   }));
 };
+
+export const formatDate = (date: Date) =>
+  date.toLocaleString('en-gb', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+  });

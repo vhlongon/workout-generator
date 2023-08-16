@@ -1,68 +1,52 @@
-import { toTitleCase } from '@/helpers/format';
+import { WorkoutCard } from '@/components/WorkoutCard';
+import { getWorkoutName } from '@/helpers/value';
 import { db } from '@/prisma/client';
+import { PlusIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
+
+export const revalidate = 0;
 
 const getWorkouts = async () => {
   const workouts = await db.workout.findMany({
     include: {
       exercises: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 
   return workouts;
 };
+
 const WorkoutsPage = async () => {
   const workouts = await getWorkouts();
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div className="w-full max-w-7xl mx-auto flex justify-center items-center">
       {workouts.length ? (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {workouts.map(
-            ({ name, mode, target, exercises, createdAt, updatedAt, id }) => {
-              return (
-                <li
-                  className="flex flex-col border border-primary rounded-xl p-4"
-                  key={id}
-                >
-                  <span></span>
-                  <span>Name: {toTitleCase(name)}</span>
-                  <span>Mode: {toTitleCase(mode)}</span>
-                  <span>Target: {toTitleCase(target)}</span>
-                  <span>
-                    Created: {new Date(createdAt).toLocaleString('en-gb')}
-                  </span>
-                  {updatedAt !== createdAt && (
-                    <span>
-                      Updated:
-                      {new Date(updatedAt).toLocaleString('en-gb')}
-                    </span>
-                  )}
-
-                  {/* <span>Notes: {workout.notes}</span> */}
-                  <span>Exercises:</span>
-                  <ul className="flex flex-col gap-2">
-                    {exercises.map(({ reps, sets, name, id: exerciseId }) => {
-                      const repsValue =
-                        reps.length === 1
-                          ? reps[0]
-                          : `${reps[0]}-${reps[reps.length - 1]}`;
-
-                      return (
-                        <li key={exerciseId}>
-                          <span>
-                            {toTitleCase(name)}, {repsValue} reps, {sets} sets
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              );
-            }
-          )}
-        </ul>
+        <div className="flex flex-col gap-4">
+          <Link href="/create">
+            <span className="inline-flex items-center btn btn-sm btn-accent">
+              Create workout
+              <PlusIcon className="w-4 h-4" />
+            </span>
+          </Link>
+          <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4">
+            {workouts.map(workout => (
+              <li key={workout.id}>
+                <WorkoutCard {...workout} name={getWorkoutName(workout.name)} />
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : (
-        <span>no workouts yet</span>
+        <div className="flex flex-col gap-2 items-center">
+          No workouts yet
+          <Link href="/create">
+            <span className="btn btn-sm btn-accent">Create one</span>
+          </Link>
+        </div>
       )}
     </div>
   );

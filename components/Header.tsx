@@ -15,7 +15,7 @@ export const Header = async () => {
   const user = await currentUser();
 
   return (
-    <header className="navbar bg-base-100">
+    <header className="navbar bg-base-100 p-4">
       <div className="flex gap-4 flex-1">
         {userId && (
           <div className="avatar">
@@ -31,7 +31,8 @@ export const Header = async () => {
           </div>
         )}
         <h1 className="font-accent text-sm tracking-wide sm:text-xl text-primary">
-          Workout generator
+          <span className="hidden sm:block">Workout generator</span>
+          <span className="sm:hidden">WG</span>
         </h1>
       </div>
 
