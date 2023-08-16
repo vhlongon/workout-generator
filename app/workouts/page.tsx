@@ -44,8 +44,8 @@ const WorkoutsPage = async () => {
     <div className="w-full max-w-7xl mx-auto flex justify-center items-center">
       {workouts.length ? (
         <div className="flex flex-col gap-4">
-          <Link href="/create">
-            <span className="inline-flex items-center btn btn-sm btn-accent">
+          <Link href="/create" className="w-[200px]">
+            <span className="btn btn-sm btn-accent">
               Create workout
               <PlusIcon className="w-4 h-4" />
             </span>

@@ -15,7 +15,7 @@ export const Header = async () => {
   const user = await currentUser();
 
   return (
-    <header className="navbar bg-base-100 p-4">
+    <header className="navbar bg-base-100 p-4 shadow-xl">
       <div className="flex gap-4 flex-1">
         {userId && (
           <div className="avatar">
