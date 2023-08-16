@@ -4,9 +4,11 @@ import { getMediumValue } from '@/helpers/medium';
 import { deslugify, slugify } from '@/helpers/slugify';
 import { formatToTitleCase } from '@/helpers/toTitleCase';
 import { WorkoutFormData } from '@/types';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Mode, Target } from '@prisma/client';
 import { useEffect, useId, useRef, useState, useTransition } from 'react';
+import { ErrorMessage } from './ErrorMessage';
+import { Select } from './Select';
 
 export const CreateWorkoutForm = ({
   exercises,
@@ -155,21 +157,16 @@ export const CreateWorkoutForm = ({
               >
                 Mode
               </label>
-              <select
-                className="select select-sm"
+              <Select
                 onChange={handleInputChange}
                 name="mode"
                 id="mode"
                 value={formData.mode}
-              >
-                {Object.values(Mode).map(m => {
-                  return (
-                    <option key={m} value={m}>
-                      {formatToTitleCase(m)}
-                    </option>
-                  );
-                })}
-              </select>
+                options={Object.values(Mode).map(m => ({
+                  name: formatToTitleCase(m),
+                  value: m,
+                }))}
+              ></Select>
             </div>
 
             <div className="form-control">
@@ -179,21 +176,16 @@ export const CreateWorkoutForm = ({
               >
                 Target
               </label>
-              <select
-                className="select select-sm"
+              <Select
                 onChange={handleInputChange}
                 name="target"
                 id="target"
                 value={formData.target}
-              >
-                {Object.values(Target).map(t => {
-                  return (
-                    <option key={t} value={t}>
-                      {formatToTitleCase(t)}
-                    </option>
-                  );
-                })}
-              </select>
+                options={Object.values(Target).map(t => ({
+                  name: formatToTitleCase(t),
+                  value: t,
+                }))}
+              ></Select>
             </div>
           </div>
           <div className="flex w-full flex-col gap-2 justify-center">
@@ -204,17 +196,7 @@ export const CreateWorkoutForm = ({
             >
               {isPending ? 'Creating workout...' : 'Create workout'}
             </button>
-            {error && !isPending && (
-              <div className="alert alert-error">
-                <details>
-                  <summary className="flex gap-2 items-center cursor-pointer">
-                    <XCircleIcon className="h-6 w-6" />
-                    Something went wrong ▾
-                  </summary>
-                  <pre className="text-xs whitespace-pre-wrap">{error}</pre>
-                </details>
-              </div>
-            )}
+            {error && !isPending && <ErrorMessage>{error}</ErrorMessage>}
           </div>
         </div>
         {confirmation && (
