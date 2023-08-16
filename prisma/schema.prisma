@@ -30,6 +30,7 @@ model Workout {
   exercises Exercise[]
   target    Target
   mode      Mode
+  notes     String?
 
   @@unique([userId, name])
   @@index([userId, id])
