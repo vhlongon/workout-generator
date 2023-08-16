@@ -11,6 +11,7 @@ const openai = new OpenAIApi(configuration);
 const getAiResponse = async (content: string) => {
   const chatCompletion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
+    temperature: 0.9,
     messages: [{ role: 'assistant', content }],
   });
 
@@ -82,6 +83,7 @@ const parsePrompt = (
 export const getWorkoutSuggestion = async (input: SuggestionFormData) => {
   const prompt = generateWorkoutPrompt(input);
   const suggestion = await getAiResponse(prompt);
+  console.log('🚀 ~ suggestion:', suggestion);
 
   if (!suggestion) {
     return;

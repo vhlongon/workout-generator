@@ -45,9 +45,13 @@ export const CreateWorkoutFlow = () => {
     setSuggestionFormData({ ...suggestionFormData, [name]: value });
   };
 
-  console;
+  const onSuggestionStart = () => {
+    setIsLoading(true);
+    setError('');
+    setWorkoutFormData(null);
+  };
 
-  const onSubmitStart = () => {
+  const onSaveStart = () => {
     setIsLoading(true);
     setError('');
   };
@@ -55,9 +59,11 @@ export const CreateWorkoutFlow = () => {
   const onCompleted = () => {
     setIsLoading(false);
   };
+
   const onSuggestionSuccess = (data: WorkoutFormData) => {
     setWorkoutFormData(data);
   };
+
   const onSaveWorkoutSuccess = () => {
     setConfirmation('Workout saved!');
     setWorkoutFormData(null);
@@ -67,7 +73,7 @@ export const CreateWorkoutFlow = () => {
     <div>
       <SuggestionForm
         initialValues={suggestionFormData}
-        onSubmitStart={onSubmitStart}
+        onSubmitStart={onSuggestionStart}
         onError={setError}
         onSuccess={onSuggestionSuccess}
         onCompleted={onCompleted}
@@ -81,7 +87,7 @@ export const CreateWorkoutFlow = () => {
           </div>
           <WorkoutForm
             initialValues={workoutFormData}
-            onSubmitStart={onSubmitStart}
+            onSubmitStart={onSaveStart}
             onError={setError}
             onSuccess={onSaveWorkoutSuccess}
             onCompleted={onCompleted}
