@@ -21,7 +21,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
   const username = getUserNameOrId(authUser);
 
   const workoutTitle = data?.title ?? `${data.mode}-${data.target}`;
-  const workoutName = `${username}'::${workoutTitle}`;
+  const workoutName = `${username}::${workoutTitle}`;
 
   try {
     // check if there is a user with the same email
