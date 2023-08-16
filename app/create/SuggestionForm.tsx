@@ -70,6 +70,7 @@ export const SuggestionForm = ({
             type="text"
             name="title"
             id="title"
+            placeholder="Bone crusher"
             value={formData.title}
             onChange={handleInputChange}
           />

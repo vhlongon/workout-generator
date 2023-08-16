@@ -106,7 +106,7 @@ export const CreateWorkoutFlow = () => {
             getFadeInClass(Boolean(confirmation))
           )}
         >
-          <div className="alert alert-info text-sm w-full">
+          <div className="alert alert-info text-sm flex justify-center">
             <CheckCircleIcon className="h-6 w-6" />
             <span>{confirmation}</span>
           </div>
