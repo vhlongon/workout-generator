@@ -1,25 +1,21 @@
 'use client';
 import { WorkoutForm, WorkoutFormProps } from '@/app/create/WorkoutForm';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const UpdateWorkoutFlow = (props: WorkoutFormProps) => {
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [confirmation, setConfirmation] = useState<string | null>(null);
+  const {
+    confirmation,
+    error,
+    isLoading,
+    setConfirmation,
+    setError,
+    setIsLoading,
+  } = useConfirmationState();
   const router = useRouter();
-
-  useEffect(() => {
-    if (confirmation) {
-      const timeoutId = setTimeout(() => {
-        setConfirmation(null);
-      }, 2000);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [confirmation]);
 
   const onSubmitStart = () => {
     setIsLoading(true);

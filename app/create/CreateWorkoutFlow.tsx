@@ -1,36 +1,32 @@
 'use client';
 import { SuggestionForm } from '@/app/create/SuggestionForm';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { WorkoutFormData } from '@/types';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Mode, Target } from '@prisma/client';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { WorkoutForm } from './WorkoutForm';
 
 export const CreateWorkoutFlow = () => {
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [confirmation, setConfirmation] = useState<string | null>(null);
-  const suggestionFormData = {
+  const {
+    confirmation,
+    error,
+    isLoading,
+    setConfirmation,
+    setError,
+    setIsLoading,
+  } = useConfirmationState();
+  const initialSuggestionData = {
     mode: Mode.HYPERTROPHY,
     target: Target.FULL_BODY,
     totalSets: 12,
   };
   const [workoutFormData, setWorkoutFormData] =
     useState<WorkoutFormData | null>();
-
   const router = useRouter();
-
-  useEffect(() => {
-    if (confirmation) {
-      const timeoutId = setTimeout(() => {
-        setConfirmation(null);
-      }, 3000);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [confirmation]);
 
   const onSuggestionStart = () => {
     setIsLoading(true);
@@ -66,7 +62,7 @@ export const CreateWorkoutFlow = () => {
   return (
     <div>
       <SuggestionForm
-        initialValues={suggestionFormData}
+        initialValues={initialSuggestionData}
         onSubmitStart={onSuggestionStart}
         onError={setError}
         onSuccess={onSuggestionSuccess}
