@@ -19,12 +19,3 @@ const loadingPhrases = [
 export const getRandomLoadingPhrase = () => {
   return loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
 };
-
-export const getWorkoutName = (name: string) => {
-  if (name.includes('::')) {
-    const [, workoutName] = name.split('::');
-    return toTitleCaseWithSpaces(workoutName);
-  }
-
-  return name;
-};

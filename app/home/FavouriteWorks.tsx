@@ -1,6 +1,5 @@
 import { getFavoriteWorkouts } from '@/actions/getFavouriteWorkouts';
 import { WorkoutCard } from '@/components/WorkoutCard';
-import { getWorkoutName } from '@/helpers/value';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
@@ -20,7 +19,7 @@ export const FavouriteWorks = async () => {
         <div className="flex justify-center">
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-5xl w-full gap-2 mx-auto">
             {favouriteWorkouts.map(workout => {
-              const name = getWorkoutName(workout.name);
+              const { name } = workout;
               return (
                 <li key={workout.id}>
                   <div

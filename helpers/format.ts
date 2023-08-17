@@ -1,3 +1,5 @@
+import { Exercise, Workout } from '@prisma/client';
+
 export const slugify = (str: string) => {
   return str
     .toLowerCase()
@@ -35,6 +37,8 @@ export const toTitleCaseWithSpaces = (str: string) => {
   return words.map(capitalize).join(' ');
 };
 
+export const sanitizeInput = (str: string) => str.replace(/[^a-zA-Z0-9 ]/g, '');
+
 export const formatOptions = (options: Record<string, string>) => {
   return Object.values(options).map(m => ({
     name: toTitleCase(m),
@@ -48,3 +52,20 @@ export const formatDate = (date: Date) =>
     month: '2-digit',
     year: '2-digit',
   });
+
+export const formatWorkoutData = (
+  workout: Workout & { exercises: Exercise[] }
+) => {
+  const { exercises, ...props } = workout;
+
+  return {
+    ...props,
+    exercises: exercises.map(({ name, id, sets, reps }) => {
+      return {
+        name,
+        sets,
+        reps,
+      };
+    }),
+  };
+};

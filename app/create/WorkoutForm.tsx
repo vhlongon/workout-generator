@@ -6,8 +6,9 @@ import { deslugify, slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { FormProps, WorkoutFormData } from '@/types';
 import { useId, useState, useTransition } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
+export type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
 
 export const WorkoutForm = ({
   initialValues,
@@ -15,6 +16,7 @@ export const WorkoutForm = ({
   onError,
   onSuccess,
   onSubmitStart,
+  title,
   buttonText,
 }: WorkoutFormProps) => {
   const id = useId();
@@ -28,7 +30,7 @@ export const WorkoutForm = ({
       try {
         const data = await saveWorkoutAction(formData);
 
-        if ('error' in data) {
+        if (data.error) {
           onError?.(data.error);
           return;
         }
@@ -48,16 +50,20 @@ export const WorkoutForm = ({
     >
   ) => {
     const { name, value } = e.target;
-    const [exerciseName, property] = name.split('_');
 
-    if (name !== 'exercises') {
+    const isNotExercise = ['mode', 'target', 'notes'].includes(name);
+    if (isNotExercise) {
       setFormData({ ...formData, [name]: value });
       return;
     }
 
+    const [exerciseName, property] = name.split('_');
     const updatedExercises = formData.exercises.map(exercise => {
       if (exercise.name.toLowerCase() === deslugify(exerciseName)) {
-        return { ...exercise, [property]: [Number(value)] };
+        return {
+          ...exercise,
+          [property]: property === 'sets' ? Number(value) : [Number(value)],
+        };
       }
       return exercise;
     });
@@ -68,7 +74,7 @@ export const WorkoutForm = ({
   return (
     <div className="max-w-sm">
       <p className="text-lg font-accent tracking-widest text-accent text-center mb-2">
-        Customize or save your workout as is
+        {title}
       </p>
 
       <form onSubmit={handleSubmit} id={id}>
@@ -93,6 +99,8 @@ export const WorkoutForm = ({
                   formData.exercises[index].reps
                 );
 
+                const isRange = min !== max;
+
                 return (
                   <tr key={exercise.name}>
                     <td>
@@ -112,19 +120,27 @@ export const WorkoutForm = ({
                     </td>
 
                     <td>
-                      <div className="flex justify-between px-2">
-                        <span className="text-sm text-secondary">{min}</span>
-                        <span className="text-sm text-secondary">{max}</span>
-                      </div>
+                      {isRange && (
+                        <div className="flex justify-between px-2">
+                          <span className="text-sm text-secondary">{min}</span>
+                          <span className="text-sm text-secondary">{max}</span>
+                        </div>
+                      )}
                       <input
-                        className="range w-16"
-                        type="range"
+                        className={twMerge(
+                          `${
+                            isRange
+                              ? `range max-w-[60px]`
+                              : 'input w-16 input-sm input-bordered'
+                          }`
+                        )}
+                        type={isRange ? 'range' : 'number'}
                         name={repsId}
-                        min={min}
+                        min={isRange ? min : 1}
                         step={1}
                         id={repsId}
                         required
-                        max={max}
+                        max={isRange ? max : 20}
                         value={repsValue}
                         onChange={handleInputChange}
                       />
@@ -170,11 +186,6 @@ export const WorkoutForm = ({
                 <span>{buttonText}</span>
               )}
             </button>
-            {isPending && (
-              <span className="text-xs text-center text-secondary">
-                Saving workout...
-              </span>
-            )}
           </div>
         </div>
       </form>

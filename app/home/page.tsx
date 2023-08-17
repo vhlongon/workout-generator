@@ -1,7 +1,4 @@
-import { WorkoutCard } from '@/components/WorkoutCard';
 import { getUserNameOrId } from '@/helpers/data';
-import { getWorkoutName } from '@/helpers/value';
-import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { FavouriteWorks } from './FavouriteWorks';

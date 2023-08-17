@@ -1,5 +1,4 @@
 import { WorkoutCard } from '@/components/WorkoutCard';
-import { getWorkoutName } from '@/helpers/value';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -53,7 +52,7 @@ const WorkoutsPage = async () => {
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4">
             {workouts.map(workout => (
               <li key={workout.id}>
-                <WorkoutCard {...workout} name={getWorkoutName(workout.name)} />
+                <WorkoutCard {...workout} />
               </li>
             ))}
           </ul>

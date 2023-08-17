@@ -8,13 +8,14 @@ export type FormProps<InitValues, SuccessData> = {
   onSuccess?: (data: SuccessData) => void;
   onSubmitStart?: () => void;
   buttonText: string;
+  title?: string;
 };
 
 type BaseFormData = {
   mode: Mode;
   target: Target;
   notes?: string | null;
-  title?: string;
+  name?: string;
 };
 export type WorkoutFormData = BaseFormData & {
   exercises: Pick<Exercise, 'name' | 'sets' | 'reps'>[];

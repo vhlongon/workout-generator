@@ -8,13 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { WorkoutForm } from './WorkoutForm';
-
-const getFadeInClass = (isLoading: boolean) => {
-  return twMerge(
-    'transition-all duration-300',
-    isLoading ? 'opacity-100 h-auto' : 'opacity-0 h-0'
-  );
-};
+import { getFadeInClass } from '@/helpers/animation';
 
 export const CreateWorkoutFlow = () => {
   const [error, setError] = useState('');
@@ -87,6 +81,7 @@ export const CreateWorkoutFlow = () => {
             onSuccess={onSaveWorkoutSuccess}
             onCompleted={onCompleted}
             buttonText="Save workout"
+            title="Customize or save your workout as is"
           />
         </>
       )}

@@ -15,6 +15,7 @@ export const SuggestionForm = ({
   onSubmitStart,
   onSuccess,
   buttonText,
+  title = 'Get a workout suggestion',
 }: SuggestionFormProps) => {
   const id = useId();
   const [isPending, startTransition] = useTransition();
@@ -52,7 +53,7 @@ export const SuggestionForm = ({
   return (
     <div className="max-w-sm">
       <p className="text-lg font-accent tracking-widest text-accent text-center mb-2">
-        Get a workout suggestion
+        {title}
       </p>
 
       <form
@@ -61,16 +62,16 @@ export const SuggestionForm = ({
         id={id}
       >
         <div className="form-control">
-          <label className="label text-sm text text-gray-400" htmlFor="title">
-            Give a unique title to your workout
+          <label className="label text-sm text text-gray-400" htmlFor="name">
+            Give a unique name to your workout
           </label>
           <input
             className="input input-sm input-bordered"
             type="text"
-            name="title"
-            id="title"
+            name="name"
+            id="name"
             placeholder="Bone crusher"
-            value={formData.title}
+            value={formData.name}
             onChange={handleInputChange}
           />
           <label className="label">

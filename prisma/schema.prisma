@@ -22,7 +22,7 @@ model User {
 model Workout {
   id String @id @default(uuid())
 
-  name        String     @unique
+  name        String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   userId      String
@@ -33,8 +33,8 @@ model Workout {
   notes       String?
   isFavourite Boolean?   @default(false)
 
-  @@unique([userId, name])
-  @@index([userId, id])
+  @@unique([name, userId])
+  @@index([id, userId])
 }
 
 model Exercise {
@@ -47,7 +47,8 @@ model Exercise {
   workoutId String
   workout   Workout  @relation(fields: [workoutId], references: [id])
 
-  @@index([workoutId, id])
+  @@unique([name, workoutId])
+  @@index([id, workoutId])
 }
 
 enum Target {

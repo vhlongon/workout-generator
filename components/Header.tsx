@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
 import { NavLink } from './NavLink';
 import { SignOutButton } from './SignOutButton';
+import Link from 'next/link';
 
 export const Header = async () => {
   const { userId } = auth();
@@ -30,10 +31,12 @@ export const Header = async () => {
             </div>
           </div>
         )}
-        <h1 className="font-accent text-sm tracking-wide sm:text-xl text-primary">
-          <span className="hidden sm:block">Workout generator</span>
-          <span className="sm:hidden">WG</span>
-        </h1>
+        <Link href="/home">
+          <h1 className="font-accent text-sm tracking-wide sm:text-xl text-primary">
+            <span className="hidden sm:block">Workout generator</span>
+            <span className="sm:hidden">WG</span>
+          </h1>
+        </Link>
       </div>
 
       {userId && (

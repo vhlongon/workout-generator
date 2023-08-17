@@ -9,6 +9,7 @@ import {
 import { Exercise, Workout } from '@prisma/client';
 import { twMerge } from 'tailwind-merge';
 import { FavouriteButton } from './FavouriteButton';
+import Link from 'next/link';
 
 type CardProps = Workout & {
   exercises: Exercise[];
@@ -85,14 +86,19 @@ export const WorkoutCard = ({
           </div>
         </div>
 
-        <div className="card-actions justify-end mt-4 self-end">
-          <div className="badge badge-accent gap-2">
-            <BeakerIcon className="w-4 h-4" />
-            {toTitleCase(target)}
-          </div>
-          <div className="badge badge-accent gap-2">
-            <BoltIcon className="w-4 h-4" />
-            {toTitleCase(mode)}
+        <div className="card-actions w-full justify-between mt-4">
+          <Link href={`/workout/${id}`}>
+            <span className="btn btn-xs btn-primary">Edit</span>
+          </Link>
+          <div className="flex gap-2">
+            <div className="badge badge-accent gap-2">
+              <BeakerIcon className="w-4 h-4" />
+              {toTitleCase(target)}
+            </div>
+            <div className="badge badge-accent gap-2">
+              <BoltIcon className="w-4 h-4" />
+              {toTitleCase(mode)}
+            </div>
           </div>
         </div>
       </div>
