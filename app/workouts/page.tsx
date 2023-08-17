@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 export const revalidate = 0;
 
+/* TODO: Add sorting and filter  */
+
 const getUserWorkouts = async () => {
   try {
     const authUser = await currentUser();

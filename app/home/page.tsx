@@ -32,16 +32,6 @@ const Homepage = async () => {
       )}
 
       <FavouriteWorks />
-
-      <div className="flex flex-col gap-4 mt-16 border border-gray-500 rounded p-4 text-gray-500">
-        <span className="text-center block font-bold">Upcomming features:</span>
-        <ul>
-          <li>
-            {/* TODO: Add sorting and filter  */}
-            <code>- Sort and filter workouts</code>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 };
