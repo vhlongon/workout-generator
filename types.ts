@@ -1,4 +1,5 @@
 import { Exercise, Mode, Target } from '@prisma/client';
+import { ChangeEvent } from 'react';
 
 export type FormProps<InitValues, SuccessData> = {
   initialValues: InitValues;
@@ -21,4 +22,9 @@ export type WorkoutFormData = BaseFormData & {
 
 export type SuggestionFormData = BaseFormData & {
   totalSets: number;
+};
+
+export type CustomSelectProps = {
+  onChange: (e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  value: string;
 };

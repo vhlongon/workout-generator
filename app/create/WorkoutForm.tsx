@@ -1,10 +1,10 @@
 'use client';
 import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
-import { Select } from '@/components/Select';
-import { deslugify, formatOptions, slugify } from '@/helpers/format';
+import { ModeSelect } from '@/components/ModeSelect';
+import { TargetSelect } from '@/components/TargetSelect';
+import { deslugify, slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { FormProps, WorkoutFormData } from '@/types';
-import { Mode, Target } from '@prisma/client';
 import { useId, useState, useTransition } from 'react';
 
 type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
@@ -135,37 +135,11 @@ export const WorkoutForm = ({
             </tbody>
           </table>
           <div className="flex justify-between">
-            <div className="form-control">
-              <label
-                className="label text-sm text text-gray-400"
-                htmlFor="mode"
-              >
-                Mode
-              </label>
-              <Select
-                onChange={handleInputChange}
-                name="mode"
-                id="mode"
-                value={formData.mode}
-                options={formatOptions(Mode)}
-              ></Select>
-            </div>
-
-            <div className="form-control">
-              <label
-                className="label text-sm text text-gray-400"
-                htmlFor="target"
-              >
-                Target
-              </label>
-              <Select
-                onChange={handleInputChange}
-                name="target"
-                id="target"
-                value={formData.target}
-                options={formatOptions(Target)}
-              ></Select>
-            </div>
+            <ModeSelect onChange={handleInputChange} value={formData.mode} />
+            <TargetSelect
+              onChange={handleInputChange}
+              value={formData.target}
+            />
           </div>
           <div className="form-control">
             <label className="label text-sm text text-gray-400" htmlFor="name">
