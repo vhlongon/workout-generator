@@ -1,3 +1,5 @@
+import { toTitleCaseWithSpaces } from './format';
+
 export const getMediumValue = (arr: number[]) => {
   const sorted = arr.sort((a, b) => a - b);
   const half = Math.floor(sorted.length / 2);
@@ -21,7 +23,8 @@ export const getRandomLoadingPhrase = () => {
 export const getWorkoutName = (name: string) => {
   if (name.includes('::')) {
     const [, workoutName] = name.split('::');
-    return workoutName;
+    return toTitleCaseWithSpaces(workoutName);
   }
+
   return name;
 };

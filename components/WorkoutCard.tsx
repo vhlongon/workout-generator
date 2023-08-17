@@ -61,7 +61,8 @@ export const WorkoutCard = ({
 
                 return (
                   <li className="text-sm" key={exerciseId}>
-                    <span>
+                    <span className="flex items-center gap-1">
+                      <span className="text-[0.5rem]">◉</span>
                       {toTitleCase(name)}, {repsValue} reps, {sets} sets
                     </span>
                   </li>

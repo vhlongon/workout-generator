@@ -47,17 +47,14 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
               isPending ? 'loading' : ''
             )}
           >
-            <XCircleIcon
-              className="w-6 h-6 text-error"
-              title="Remove from favourites"
-            />
+            <XCircleIcon className="w-6 h-6 text-error" title="Re-run" />
           </button>
         </>
       ) : (
         <>
           {!isPending && (
             <span className="text-gray-400">
-              {isFavourite ? 'Remove from favourites' : 'Add to favourites'}
+              {isFavourite ? 'Remove' : 'Add'}
             </span>
           )}
           <button
