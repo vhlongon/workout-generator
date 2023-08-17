@@ -1,7 +1,6 @@
 'use client';
 import { WorkoutForm, WorkoutFormProps } from '@/app/create/WorkoutForm';
 import { ErrorMessage } from '@/components/ErrorMessage';
-import { getFadeInClass } from '@/helpers/animation';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -35,6 +34,12 @@ const UpdateWorkoutFlow = (props: WorkoutFormProps) => {
   const onCompleted = () => {
     setIsLoading(false);
   };
+
+  const getFadeInClass = (isLoading: boolean) =>
+    twMerge(
+      'transition-all duration-300',
+      isLoading ? 'opacity-100 h-auto' : 'opacity-0 h-0'
+    );
 
   return (
     <>

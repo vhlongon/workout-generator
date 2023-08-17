@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { WorkoutForm } from './WorkoutForm';
-import { getFadeInClass } from '@/helpers/animation';
 
 export const CreateWorkoutFlow = () => {
   const [error, setError] = useState('');
@@ -57,6 +56,12 @@ export const CreateWorkoutFlow = () => {
     setWorkoutFormData(null);
     router.refresh();
   };
+
+  const getFadeInClass = (isLoading: boolean) =>
+    twMerge(
+      'transition-all duration-300',
+      isLoading ? 'opacity-100 h-auto' : 'opacity-0 h-0'
+    );
 
   return (
     <div>
