@@ -1,14 +1,49 @@
+import { WorkoutCard } from '@/components/WorkoutCard';
 import { getUserNameOrId } from '@/helpers/data';
+import { getWorkoutName } from '@/helpers/value';
+import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
+const getFavoriteWorkouts = async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return [];
+    }
+
+    const email = user.emailAddresses[0].emailAddress;
+
+    const workouts = await db.workout.findMany({
+      include: {
+        exercises: true,
+      },
+      where: {
+        isFavourite: true,
+        user: {
+          email,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return workouts;
+  } catch (error) {
+    return [];
+  }
+};
+
 const Homepage = async () => {
   const user = await currentUser();
+  const favouriteWorkouts = await getFavoriteWorkouts();
 
   return (
     <div className="w-full flex flex-col justify-center items-center">
       {user ? (
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-2xl font-semibold">
           Welcome back{' '}
           <span className="text-secondary">{getUserNameOrId(user)}</span>!
         </h2>
@@ -28,6 +63,27 @@ const Homepage = async () => {
             an account
           </div>
         </div>
+      )}
+
+      {Boolean(favouriteWorkouts.length) && (
+        <>
+          <div className="w-full max-w-lg text-center">
+            <div className="divider"></div>
+            <h3 className="text-xl">Favourite workouts</h3>
+            <div className="divider"></div>
+          </div>
+          <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4">
+            {favouriteWorkouts.map(workout => (
+              <li key={workout.id}>
+                <WorkoutCard
+                  className="card-compact"
+                  {...workout}
+                  name={getWorkoutName(workout.name)}
+                />
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       <div className="flex flex-col gap-4 mt-16 border border-gray-500 rounded p-4 text-gray-500">

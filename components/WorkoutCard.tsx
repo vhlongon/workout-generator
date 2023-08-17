@@ -7,9 +7,12 @@ import {
   TagIcon,
 } from '@heroicons/react/24/solid';
 import { Exercise, Workout } from '@prisma/client';
+import { twMerge } from 'tailwind-merge';
+import { FavouriteButton } from './FavouriteButton';
 
 type CardProps = Workout & {
   exercises: Exercise[];
+  className?: string;
 };
 export const WorkoutCard = ({
   createdAt,
@@ -19,9 +22,20 @@ export const WorkoutCard = ({
   notes,
   target,
   exercises,
+  isFavourite,
+  className,
 }: CardProps) => {
   return (
-    <div className="card bg-neutral h-full border border-primary shadow-xl">
+    <div
+      className={twMerge(
+        'card bg-neutral h-full border border-primary shadow-xl',
+        className
+      )}
+    >
+      <div className="flex items-center gap-1 text-xs text-success absolute top-0 right-0 p-2">
+        <FavouriteButton id={id} isFavourite={Boolean(isFavourite)} />
+      </div>
+
       <div className="card-body">
         <span className="flex gap-1 items-center text-info">
           <TagIcon className="w-4 h-4" />
