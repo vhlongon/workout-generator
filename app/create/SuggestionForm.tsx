@@ -61,6 +61,12 @@ export const SuggestionForm = ({
     });
   };
 
+  const onWorkoutSuccess = () => {
+    setWorkoutFormData(null);
+    formRef.current?.reset();
+    setConfirmation('Workout saved');
+  };
+
   return (
     <div className="max-w-sm">
       <p className="text-lg font-accent tracking-widest text-accent text-center mb-2">
@@ -148,11 +154,7 @@ export const SuggestionForm = ({
             initialValues={workoutFormData}
             title="Customize or save your workout as is"
             buttonText="Save Workout"
-            onSuccess={() => {
-              setWorkoutFormData(null);
-              formRef.current?.reset();
-              setConfirmation('Workout saved');
-            }}
+            onSuccess={onWorkoutSuccess}
           />
         </>
       )}
