@@ -3,12 +3,15 @@
 import { getUserNameOrId, isWorkoutNameUnique } from '@/helpers/data';
 import { sanitizeInput } from '@/helpers/format';
 import { db } from '@/prisma/client';
-import { WorkoutFormData } from '@/types';
+import { FormMode, WorkoutFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 import { Exercise } from '@prisma/client';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
-export const saveWorkoutAction = async (input: WorkoutFormData) => {
+export const saveWorkoutAction = async (
+  input: WorkoutFormData,
+  mode: FormMode
+) => {
   const authUser = await currentUser();
 
   if (!authUser) {
@@ -29,7 +32,7 @@ export const saveWorkoutAction = async (input: WorkoutFormData) => {
 
   const workoutIsUnique = await isWorkoutNameUnique(username, workoutName);
 
-  if (!workoutIsUnique) {
+  if (!workoutIsUnique && mode === 'create') {
     return {
       error: 'Workout name already exists',
     };

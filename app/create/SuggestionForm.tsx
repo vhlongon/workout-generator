@@ -144,6 +144,7 @@ export const SuggestionForm = ({
             <div className="divider"></div>
           </div>
           <WorkoutForm
+            mode="create"
             initialValues={workoutFormData}
             title="Customize or save your workout as is"
             buttonText="Save Workout"

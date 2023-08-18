@@ -7,18 +7,21 @@ import { TargetSelect } from '@/components/TargetSelect';
 import { slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { useConfirmationState } from '@/hooks/useConfirmationState';
-import { FormProps, WorkoutFormData } from '@/types';
+import { FormMode, FormProps, WorkoutFormData } from '@/types';
 import { Mode, Target } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { useId, useTransition } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export type WorkoutFormProps = FormProps<WorkoutFormData>;
+export type WorkoutFormProps = FormProps<WorkoutFormData> & {
+  mode: FormMode;
+};
 
 export const WorkoutForm = ({
   initialValues,
   title,
   buttonText,
+  mode,
   onSuccess,
 }: WorkoutFormProps) => {
   const id = useId();
@@ -43,7 +46,7 @@ export const WorkoutForm = ({
           })),
         };
 
-        const data = await saveWorkoutAction(formData);
+        const data = await saveWorkoutAction(formData, mode);
 
         if (data.error) {
           setError?.(data.error);

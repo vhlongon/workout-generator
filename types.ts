@@ -24,3 +24,5 @@ export type SuggestionFormData = BaseFormData & {
 export type CustomSelectProps = {
   defaultValue: string;
 };
+
+export type FormMode = 'create' | 'update';

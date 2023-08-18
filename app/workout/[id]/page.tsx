@@ -33,6 +33,7 @@ const WorkoutPage = async ({ params }: WorkoutPageProps) => {
         initialValues={formatWorkoutData(data)}
         buttonText="Update Workout"
         title={data.name}
+        mode="update"
       />
     </div>
   );
