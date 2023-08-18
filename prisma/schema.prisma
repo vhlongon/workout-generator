@@ -57,6 +57,13 @@ enum Target {
   LOWER_BODY
   PUSH
   PULL
+  LEGS
+  BACK
+  CHEST
+  SHOULDERS
+  BICEPS
+  TRICEPS
+  ABS
 }
 
 enum Mode {
