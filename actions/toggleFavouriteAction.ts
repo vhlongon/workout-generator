@@ -29,7 +29,7 @@ export const toggleFavouriteAction = async (
       },
     });
 
-    return true;
+    return { data: true };
   } catch (error) {
     return {
       error: (error as PrismaClientValidationError).message,

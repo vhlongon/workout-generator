@@ -1,9 +1,16 @@
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import React, { ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export const ErrorMessage = ({ children }: { children: ReactNode }) => {
+export const ErrorMessage = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   return (
-    <div className="alert alert-error whitespace-normal">
+    <div className={twMerge('alert alert-error whitespace-normal', className)}>
       <details>
         <summary className="flex gap-2 items-center cursor-pointer">
           <XCircleIcon className="h-6 w-6" />

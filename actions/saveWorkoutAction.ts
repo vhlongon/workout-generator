@@ -120,8 +120,10 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
     }
 
     return {
-      ...workout,
-      exercises: updatedExercises,
+      data: {
+        ...workout,
+        exercises: updatedExercises,
+      },
     };
   } catch (error) {
     return {

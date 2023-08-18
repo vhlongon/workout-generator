@@ -34,14 +34,19 @@ export const SuggestionForm = ({
     onSubmitStart?.();
     startTransition(async () => {
       try {
-        const data = await generateSuggestionAction(formData);
+        const res = await generateSuggestionAction(formData);
 
-        if ('error' in data) {
-          onError?.(data.error);
+        if (res.error) {
+          onError?.(res.error);
           return;
         }
 
-        onSuccess?.({ ...data, ...formData });
+        if (!res.data) {
+          onError?.('No data returned');
+          return;
+        }
+
+        onSuccess?.({ ...res.data, ...formData });
       } catch (error) {
         onError?.((error as Error).message);
       } finally {

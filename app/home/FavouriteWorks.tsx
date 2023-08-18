@@ -1,4 +1,4 @@
-import { getFavoriteWorkouts } from '@/actions/getFavouriteWorkouts';
+import { getFavoriteWorkouts } from '@/actions/getFavouriteWorkoutsAction';
 import { WorkoutCard } from '@/components/WorkoutCard';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';

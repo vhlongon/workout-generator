@@ -21,7 +21,7 @@ export const generateSuggestionAction = async (input: SuggestionFormData) => {
       };
     }
 
-    return suggestion;
+    return { data: suggestion };
   } catch (error) {
     return {
       error: (error as Error).message,

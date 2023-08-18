@@ -25,7 +25,7 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
       try {
         const data = await toggleFavouriteAction(id, isFavourite);
 
-        if (typeof data === 'object') {
+        if (data?.error) {
           setError(data.error);
           return;
         }
@@ -35,6 +35,7 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
       }
     });
   };
+
   return (
     <form className="flex items-center gap-1" onSubmit={handleSubmit}>
       {error ? (
