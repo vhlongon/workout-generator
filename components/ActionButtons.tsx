@@ -1,9 +1,8 @@
 'use client';
 import { deleteWorkoutAction } from '@/actions/deleteWorkoutAction';
+import { useSubmitAction } from '@/hooks/useSubmitAction';
 import { MinusCircleIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { ErrorMessage } from './ErrorMessage';
 
@@ -12,26 +11,9 @@ type ActionButtonsProps = {
 };
 
 export const ActionButtons = ({ id }: ActionButtonsProps) => {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState('');
-  const router = useRouter();
-
-  const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    startTransition(async () => {
-      try {
-        const data = await deleteWorkoutAction(id);
-
-        if (data?.error) {
-          setError(data.error);
-          return;
-        }
-        router.refresh();
-      } catch (error) {
-        setError((error as Error).message);
-      }
-    });
-  };
+  const { isPending, error, handleSubmit } = useSubmitAction({
+    action: async () => deleteWorkoutAction(id),
+  });
 
   return (
     <div className="w-full flex flex-col gap-2 mt-2">
@@ -42,7 +24,7 @@ export const ActionButtons = ({ id }: ActionButtonsProps) => {
             <PencilSquareIcon className="w-4 h-4" title="Edit" />
           </span>
         </Link>
-        <form onSubmit={handleDelete}>
+        <form action={handleSubmit}>
           <button
             className={twMerge(
               'btn btn-xs btn-error',

@@ -1,28 +1,19 @@
 'use client';
 import { checkPasswordAction } from '@/actions/checkPasswordAction';
+import { useSubmitAction } from '@/hooks/useSubmitAction';
 import { XCircleIcon } from '@heroicons/react/24/outline';
-import { useId, useState, useTransition } from 'react';
+import { useId } from 'react';
 
 export const ProtectForm = () => {
   const id = useId();
-  const [error, setError] = useState('');
-  const [isPending, startTransition] = useTransition();
+  const { isPending, error, handleSubmit } = useSubmitAction({
+    action: async data => {
+      return checkPasswordAction(data);
+    },
+  });
 
-  const action = (e: FormData) => {
-    setError('');
-    startTransition(async () => {
-      try {
-        const data = await checkPasswordAction(e);
-        if (data?.error) {
-          setError(data.error);
-        }
-      } catch (error) {
-        setError((error as Error).message);
-      }
-    });
-  };
   return (
-    <form action={action} className="flex flex-col gap-4" id={id}>
+    <form action={handleSubmit} className="flex flex-col gap-4" id={id}>
       <div className="form-control w-full max-w-xs">
         <input
           type="password"
