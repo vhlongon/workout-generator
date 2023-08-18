@@ -2,14 +2,14 @@ import { auth, currentUser } from '@clerk/nextjs';
 import {
   Cog6ToothIcon,
   DocumentPlusIcon,
-  DocumentTextIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
+import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { NavLink } from './NavLink';
 import { SignOutButton } from './SignOutButton';
-import Link from 'next/link';
 
 export const Header = async () => {
   const { userId } = auth();
@@ -54,7 +54,7 @@ export const Header = async () => {
             </li>
             <li>
               <NavLink href="/workouts" title="Workouts">
-                <DocumentTextIcon className="w-4 h-4" />
+                <ClipboardDocumentListIcon className="w-4 h-4" />
               </NavLink>
             </li>
             <li>
