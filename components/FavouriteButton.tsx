@@ -6,6 +6,7 @@ import {
   StarIcon,
   XCircleIcon,
 } from '@heroicons/react/24/solid';
+import { experimental_useOptimistic as useOptimistic } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type FavouriteButtonProps = {
@@ -14,8 +15,16 @@ type FavouriteButtonProps = {
 };
 
 export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
+  const [optimisticFavourite, addOptimisticFavourite] = useOptimistic(
+    isFavourite,
+    state => !state
+  );
+
   const { isPending, error, handleSubmit } = useSubmitAction({
-    action: async () => toggleFavouriteAction(id, isFavourite),
+    action: async () => {
+      addOptimisticFavourite(true);
+      return toggleFavouriteAction(id, isFavourite);
+    },
   });
 
   return (
@@ -35,19 +44,17 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
         </>
       ) : (
         <>
-          {!isPending && (
-            <span className="text-gray-400">
-              {isFavourite ? 'Remove' : 'Add'}
-            </span>
-          )}
+          <span className="text-gray-400">
+            {optimisticFavourite ? 'Remove' : 'Add'}
+          </span>
+
           <button
             type="submit"
             className={twMerge(
-              'btn btn-circle btn-ghost btn-sm cursor-pointer',
-              isPending ? 'loading' : ''
+              'btn btn-circle btn-ghost btn-sm cursor-pointer'
             )}
           >
-            {isFavourite ? (
+            {optimisticFavourite ? (
               <StarIcon className="w-6 h-6" title="Remove from favourites" />
             ) : (
               <PlusCircleIcon className="w-6 h-6" title="Add to favourites" />
