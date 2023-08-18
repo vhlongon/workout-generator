@@ -9,7 +9,7 @@ import React, { useId, useState, useTransition } from 'react';
 type SuggestionFormProps = FormProps<SuggestionFormData, WorkoutFormData>;
 
 export const SuggestionForm = ({
-  initialValues: data,
+  initialValues,
   onCompleted,
   onError,
   onSubmitStart,
@@ -19,7 +19,7 @@ export const SuggestionForm = ({
 }: SuggestionFormProps) => {
   const id = useId();
   const [isPending, startTransition] = useTransition();
-  const [formData, setFormData] = useState<SuggestionFormData>(data);
+  const [formData, setFormData] = useState<SuggestionFormData>(initialValues);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -47,6 +47,7 @@ export const SuggestionForm = ({
         }
 
         onSuccess?.({ ...res.data, ...formData });
+        setFormData(initialValues);
       } catch (error) {
         onError?.((error as Error).message);
       } finally {
@@ -75,7 +76,7 @@ export const SuggestionForm = ({
             type="text"
             name="name"
             id="name"
-            placeholder="Bone crusher"
+            placeholder="Something cool, like Bone crusher..."
             value={formData.name}
             onChange={handleInputChange}
           />

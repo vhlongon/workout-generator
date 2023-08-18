@@ -10,7 +10,7 @@ const Homepage = async () => {
     <div className="w-full flex flex-col justify-center items-center">
       {user ? (
         <h2 className="text-2xl font-semibold">
-          Welcome back{' '}
+          Welcome{' '}
           <span className="text-secondary">{getUserNameOrId(user)}</span>!
         </h2>
       ) : (
