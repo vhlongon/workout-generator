@@ -42,7 +42,7 @@ export const SuggestionForm = ({
           name: data.get('name') as string,
         };
 
-        const res = await generateSuggestionAction(formData, true);
+        const res = await generateSuggestionAction(formData);
 
         if (res.error) {
           setError?.(res.error);
