@@ -164,7 +164,6 @@ export const WorkoutForm = ({
               name="notes"
               id="notes"
               placeholder="add some notes"
-              readOnly
               defaultValue={initialValues.notes ?? ''}
             />
           </div>
