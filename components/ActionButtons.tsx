@@ -34,10 +34,11 @@ export const ActionButtons = ({ id }: ActionButtonsProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-2 mt-2">
       <div className="flex items-center gap-2">
         <Link href={`/workout/${id}`}>
           <span className="btn btn-xs btn-success">
+            Edit
             <PencilSquareIcon className="w-4 h-4" title="Edit" />
           </span>
         </Link>
@@ -49,6 +50,7 @@ export const ActionButtons = ({ id }: ActionButtonsProps) => {
             )}
             type="submit"
           >
+            Delete
             <MinusCircleIcon className="w-4 h-4" title="Remove" />
           </button>
         </form>

@@ -88,7 +88,6 @@ export const WorkoutCard = ({
         </div>
 
         <div className="card-actions w-full mt-4">
-          <ActionButtons id={id} />
           <div className="w-full flex gap-2 justify-end">
             <div className="badge badge-accent gap-2">
               <BeakerIcon className="w-4 h-4" />
@@ -99,6 +98,7 @@ export const WorkoutCard = ({
               {toTitleCase(mode)}
             </div>
           </div>
+          <ActionButtons id={id} />
         </div>
       </div>
     </div>
