@@ -4,13 +4,11 @@ import { useState, useTransition } from 'react';
 type SubmitDataOptions<FormData, Data> = {
   action: (data: FormData) => Promise<Data>;
 };
+type ActionReturnData<Data> = undefined | { error?: string; data?: Data };
 
 export const useSubmitAction = <Data = unknown,>({
   action,
-}: SubmitDataOptions<
-  FormData,
-  undefined | { error?: string; data?: Data }
->) => {
+}: SubmitDataOptions<FormData, ActionReturnData<Data>>) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
