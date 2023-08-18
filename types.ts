@@ -1,14 +1,10 @@
 import { Exercise, Mode, Target } from '@prisma/client';
-import { ChangeEvent } from 'react';
 
-export type FormProps<InitValues, SuccessData> = {
+export type FormProps<InitValues> = {
   initialValues: InitValues;
-  onCompleted?: () => void;
-  onError?: (error: string) => void;
-  onSuccess?: (data: SuccessData) => void;
-  onSubmitStart?: () => void;
-  buttonText: string;
+  buttonText?: string;
   title?: string;
+  onSuccess?: () => void;
 };
 
 type BaseFormData = {

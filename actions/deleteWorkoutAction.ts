@@ -26,7 +26,6 @@ export const deleteWorkoutAction = async (id: string) => {
 
     return { data: true };
   } catch (error) {
-    console.log(error);
     return {
       error: (error as Error).message,
     };

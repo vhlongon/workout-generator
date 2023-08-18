@@ -38,7 +38,7 @@ export const ActionButtons = ({ id }: ActionButtonsProps) => {
         </form>
       </div>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <ErrorMessage show={!isPending}>{error}</ErrorMessage>
     </div>
   );
 };

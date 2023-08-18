@@ -1,32 +1,38 @@
+'use client';
 import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
+import { ConfirmationToast } from '@/components/ConfirmationToast';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import { ModeSelect } from '@/components/ModeSelect';
 import { TargetSelect } from '@/components/TargetSelect';
 import { slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
+import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { FormProps, WorkoutFormData } from '@/types';
 import { Mode, Target } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 import { useId, useTransition } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
+export type WorkoutFormProps = FormProps<WorkoutFormData>;
 
 export const WorkoutForm = ({
   initialValues,
-  onCompleted,
-  onError,
-  onSuccess,
-  onSubmitStart,
   title,
   buttonText,
+  onSuccess,
 }: WorkoutFormProps) => {
   const id = useId();
   const [isPending, startTransition] = useTransition();
+  const { error, setError, confirmation, setConfirmation } =
+    useConfirmationState();
+  const router = useRouter();
 
   const saveWorkout = (e: FormData) => {
-    onSubmitStart?.();
     startTransition(async () => {
       try {
+        setError('');
         const formData = {
+          name: initialValues.name,
           mode: e.get('mode') as Mode,
           target: e.get('target') as Target,
           notes: e.get('notes') as string,
@@ -36,23 +42,24 @@ export const WorkoutForm = ({
             reps: [Number(e.get(`${slugify(exercise.name)}_reps`)) || 0],
           })),
         };
+
         const data = await saveWorkoutAction(formData);
 
         if (data.error) {
-          onError?.(data.error);
+          setError?.(data.error);
           return;
         }
 
         if (!data.data) {
-          onError?.('No data returned');
+          setError?.('No data returned');
           return;
         }
 
-        onSuccess?.(formData);
+        setConfirmation('Workout saved!');
+        onSuccess?.();
+        router.refresh();
       } catch (error) {
-        onError?.((error as Error).message);
-      } finally {
-        onCompleted?.();
+        setError?.((error as Error).message);
       }
     });
   };
@@ -65,6 +72,20 @@ export const WorkoutForm = ({
 
       <form action={saveWorkout} id={id}>
         <div className="flex flex-col gap-4">
+          <div className="form-control">
+            <label className="label text-sm text text-gray-400" htmlFor="name">
+              Name
+            </label>
+            <input
+              className="input input-sm input-bordered w-full disabled:bg-base-100"
+              name="name"
+              id="name"
+              type="text"
+              required
+              disabled
+              defaultValue={initialValues.name}
+            />
+          </div>
           <table className="table" align="right">
             <thead>
               <tr>
@@ -135,7 +156,7 @@ export const WorkoutForm = ({
             <TargetSelect defaultValue={initialValues.target} />
           </div>
           <div className="form-control">
-            <label className="label text-sm text text-gray-400" htmlFor="name">
+            <label className="label text-sm text text-gray-400" htmlFor="notes">
               Notes
             </label>
             <textarea
@@ -143,6 +164,7 @@ export const WorkoutForm = ({
               name="notes"
               id="notes"
               placeholder="add some notes"
+              readOnly
               defaultValue={initialValues.notes ?? ''}
             />
           </div>
@@ -165,6 +187,11 @@ export const WorkoutForm = ({
           </div>
         </div>
       </form>
+      <div className="mt-4">
+        <ErrorMessage show={!isPending}>{error}</ErrorMessage>
+
+        <ConfirmationToast text={confirmation} />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use server';
 
-import { getUserNameOrId } from '@/helpers/data';
+import { getUserNameOrId, isWorkoutNameUnique } from '@/helpers/data';
 import { sanitizeInput } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { WorkoutFormData } from '@/types';
@@ -8,7 +8,7 @@ import { currentUser } from '@clerk/nextjs';
 import { Exercise } from '@prisma/client';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
-export const saveWorkoutAction = async (data: WorkoutFormData) => {
+export const saveWorkoutAction = async (input: WorkoutFormData) => {
   const authUser = await currentUser();
 
   if (!authUser) {
@@ -19,7 +19,21 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
 
   const email = authUser.emailAddresses[0].emailAddress;
   const username = getUserNameOrId(authUser);
-  const workoutName = data?.name ?? `${data.mode}-${data.target}`;
+  const workoutName = input?.name;
+
+  if (!workoutName) {
+    return {
+      error: 'Workout name is required',
+    };
+  }
+
+  const workoutIsUnique = await isWorkoutNameUnique(username, workoutName);
+
+  if (!workoutIsUnique) {
+    return {
+      error: 'Workout name already exists',
+    };
+  }
 
   try {
     // check if there is a user with the same email
@@ -41,10 +55,10 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
     // if so update the workout otherwise create a new workout
 
     const workoutPayload = {
-      mode: data.mode,
+      mode: input.mode,
       name: workoutName,
-      notes: sanitizeInput(data.notes ?? ''),
-      target: data.target,
+      notes: sanitizeInput(input.notes ?? ''),
+      target: input.target,
     };
 
     const workout = await db.workout.upsert({
@@ -79,7 +93,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
 
     // check if there is an exercise with the same name for the workout
     // if so update the exercise otherwise create a new exercises
-    for (const newExercise of data.exercises) {
+    for (const newExercise of input.exercises) {
       const existingExercise = existingExercises.find(
         exercise => exercise.name === newExercise.name
       );
@@ -106,7 +120,7 @@ export const saveWorkoutAction = async (data: WorkoutFormData) => {
 
     // delete exercises that are not in the new exercises
     for (const existingExercise of existingExercises) {
-      const isDeleted = data.exercises.every(
+      const isDeleted = input.exercises.every(
         exercise => exercise.name !== existingExercise.name
       );
 

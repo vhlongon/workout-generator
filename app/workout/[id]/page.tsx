@@ -1,7 +1,7 @@
 import { getWorkoutAction } from '@/actions/getWorkoutAction';
-import UpdateWorkoutFlow from './UpdateWorkoutFlow';
-import { formatWorkoutData } from '@/helpers/format';
+import { WorkoutForm } from '@/app/create/WorkoutForm';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { formatWorkoutData } from '@/helpers/format';
 
 type WorkoutPageProps = {
   params: {
@@ -29,7 +29,7 @@ const WorkoutPage = async ({ params }: WorkoutPageProps) => {
 
   return (
     <div className="w-full flex flex-col justify-center items-center">
-      <UpdateWorkoutFlow
+      <WorkoutForm
         initialValues={formatWorkoutData(data)}
         buttonText="Update Workout"
         title={data.name}
