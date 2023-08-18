@@ -17,7 +17,7 @@ export const FavouriteWorks = async () => {
       </div>
       {Boolean(favouriteWorkouts.length) ? (
         <div className="flex justify-center">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-5xl w-full gap-2 mx-auto border border-base-200 rounded-2xl p-4">
+          <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4 mx-auto border border-base-200 rounded-2xl p-4">
             {favouriteWorkouts.map(workout => {
               const { name } = workout;
               return (

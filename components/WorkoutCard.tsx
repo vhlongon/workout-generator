@@ -89,7 +89,7 @@ export const WorkoutCard = ({
 
         <div className="card-actions w-full mt-4">
           <div className="w-full flex gap-2 justify-end">
-            <div className="badge badge-accent gap-2">
+            <div className="badge badge-accent gap-2 truncate">
               <BeakerIcon className="w-4 h-4" />
               {toTitleCase(target)}
             </div>
