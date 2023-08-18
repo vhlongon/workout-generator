@@ -29,8 +29,7 @@ export const SuggestionForm = ({
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const suggestAction = () => {
     onSubmitStart?.();
     startTransition(async () => {
       try {
@@ -64,7 +63,7 @@ export const SuggestionForm = ({
 
       <form
         className="max-w-md min-w-[300px] w-full flex flex-col gap-2"
-        onSubmit={handleSubmit}
+        action={suggestAction}
         id={id}
       >
         <div className="form-control">

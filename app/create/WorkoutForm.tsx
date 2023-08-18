@@ -23,8 +23,7 @@ export const WorkoutForm = ({
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState<WorkoutFormData>(initialValues);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const saveWorkout = () => {
     onSubmitStart?.();
     startTransition(async () => {
       try {
@@ -77,7 +76,7 @@ export const WorkoutForm = ({
         {title}
       </p>
 
-      <form onSubmit={handleSubmit} id={id}>
+      <form action={saveWorkout} id={id}>
         <div className="flex flex-col gap-4">
           <table className="table" align="right">
             <thead>
