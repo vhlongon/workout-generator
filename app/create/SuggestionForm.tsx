@@ -4,7 +4,8 @@ import { ModeSelect } from '@/components/ModeSelect';
 import { TargetSelect } from '@/components/TargetSelect';
 import { getRandomLoadingPhrase } from '@/helpers/value';
 import { FormProps, SuggestionFormData, WorkoutFormData } from '@/types';
-import React, { useId, useState, useTransition } from 'react';
+import { Mode, Target } from '@prisma/client';
+import { useId, useRef, useTransition } from 'react';
 
 type SuggestionFormProps = FormProps<SuggestionFormData, WorkoutFormData>;
 
@@ -19,19 +20,18 @@ export const SuggestionForm = ({
 }: SuggestionFormProps) => {
   const id = useId();
   const [isPending, startTransition] = useTransition();
-  const [formData, setFormData] = useState<SuggestionFormData>(initialValues);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const suggestAction = () => {
+  const suggestAction = (data: FormData) => {
     onSubmitStart?.();
     startTransition(async () => {
+      const formData = {
+        mode: data.get('mode') as Mode,
+        target: data.get('target') as Target,
+        totalSets: Number(data.get('totalSets')),
+        name: data.get('name') as string,
+      };
+
       try {
         const res = await generateSuggestionAction(formData);
 
@@ -46,7 +46,8 @@ export const SuggestionForm = ({
         }
 
         onSuccess?.({ ...res.data, ...formData });
-        setFormData(initialValues);
+
+        formRef.current?.reset();
       } catch (error) {
         onError?.((error as Error).message);
       } finally {
@@ -65,6 +66,7 @@ export const SuggestionForm = ({
         className="max-w-md min-w-[300px] w-full flex flex-col gap-2"
         action={suggestAction}
         id={id}
+        ref={formRef}
       >
         <div className="form-control">
           <label className="label text-sm text text-gray-400" htmlFor="name">
@@ -76,8 +78,6 @@ export const SuggestionForm = ({
             name="name"
             id="name"
             placeholder="Something cool, like Bone crusher..."
-            value={formData.name}
-            onChange={handleInputChange}
           />
           <label className="label">
             <span className="label-text-alt text-gray-400">
@@ -88,8 +88,8 @@ export const SuggestionForm = ({
         </div>
 
         <div className="flex gap-4 w-full justify-between">
-          <ModeSelect onChange={handleInputChange} value={formData.mode} />
-          <TargetSelect onChange={handleInputChange} value={formData.target} />
+          <ModeSelect defaultValue={initialValues.mode} />
+          <TargetSelect defaultValue={initialValues.target} />
           <div className="form-control">
             <label
               className="label text-sm text text-gray-400"
@@ -104,8 +104,7 @@ export const SuggestionForm = ({
               min={1}
               id="totalSets"
               required
-              value={formData.totalSets}
-              onChange={handleInputChange}
+              defaultValue={initialValues.totalSets}
             />
           </div>
         </div>

@@ -1,11 +1,11 @@
-'use client';
 import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
 import { ModeSelect } from '@/components/ModeSelect';
 import { TargetSelect } from '@/components/TargetSelect';
-import { deslugify, slugify } from '@/helpers/format';
+import { slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { FormProps, WorkoutFormData } from '@/types';
-import { useId, useState, useTransition } from 'react';
+import { Mode, Target } from '@prisma/client';
+import { useId, useTransition } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type WorkoutFormProps = FormProps<WorkoutFormData, WorkoutFormData>;
@@ -21,12 +21,21 @@ export const WorkoutForm = ({
 }: WorkoutFormProps) => {
   const id = useId();
   const [isPending, startTransition] = useTransition();
-  const [formData, setFormData] = useState<WorkoutFormData>(initialValues);
 
-  const saveWorkout = () => {
+  const saveWorkout = (e: FormData) => {
     onSubmitStart?.();
     startTransition(async () => {
       try {
+        const formData = {
+          mode: e.get('mode') as Mode,
+          target: e.get('target') as Target,
+          notes: e.get('notes') as string,
+          exercises: initialValues.exercises.map((exercise, index) => ({
+            name: exercise.name,
+            sets: Number(e.get(`${slugify(exercise.name)}_sets`)),
+            reps: [Number(e.get(`${slugify(exercise.name)}_reps`)) || 0],
+          })),
+        };
         const data = await saveWorkoutAction(formData);
 
         if (data.error) {
@@ -34,40 +43,18 @@ export const WorkoutForm = ({
           return;
         }
 
-        onSuccess?.({ ...data, ...formData });
+        if (!data.data) {
+          onError?.('No data returned');
+          return;
+        }
+
+        onSuccess?.(formData);
       } catch (error) {
         onError?.((error as Error).message);
       } finally {
         onCompleted?.();
       }
     });
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-
-    const isNotExercise = ['mode', 'target', 'notes'].includes(name);
-    if (isNotExercise) {
-      setFormData({ ...formData, [name]: value });
-      return;
-    }
-
-    const [exerciseName, property] = name.split('_');
-    const updatedExercises = formData.exercises.map(exercise => {
-      if (exercise.name.toLowerCase() === deslugify(exerciseName)) {
-        return {
-          ...exercise,
-          [property]: property === 'sets' ? Number(value) : [Number(value)],
-        };
-      }
-      return exercise;
-    });
-
-    setFormData({ ...formData, exercises: updatedExercises });
   };
 
   return (
@@ -88,16 +75,10 @@ export const WorkoutForm = ({
             </thead>
             <tbody>
               {initialValues.exercises.map((exercise, index) => {
-                const isSingleValue = exercise.reps.length === 1;
                 const repsId = `${slugify(exercise.name)}_reps`;
                 const setsId = `${slugify(exercise.name)}_sets`;
-                const min = isSingleValue ? 6 : exercise.reps[0];
+                const min = exercise.reps[0];
                 const max = exercise.reps[exercise.reps.length - 1];
-                const setsValue = formData.exercises[index].sets;
-                const repsValue = getMediumValue(
-                  formData.exercises[index].reps
-                );
-
                 const isRange = min !== max;
 
                 return (
@@ -113,8 +94,7 @@ export const WorkoutForm = ({
                         min={1}
                         id={setsId}
                         required
-                        value={setsValue}
-                        onChange={handleInputChange}
+                        defaultValue={initialValues.exercises[index].sets}
                       />
                     </td>
 
@@ -140,8 +120,9 @@ export const WorkoutForm = ({
                         id={repsId}
                         required
                         max={isRange ? max : 20}
-                        value={repsValue}
-                        onChange={handleInputChange}
+                        defaultValue={getMediumValue(
+                          initialValues.exercises[index].reps
+                        )}
                       />
                     </td>
                   </tr>
@@ -150,11 +131,8 @@ export const WorkoutForm = ({
             </tbody>
           </table>
           <div className="flex justify-between">
-            <ModeSelect onChange={handleInputChange} value={formData.mode} />
-            <TargetSelect
-              onChange={handleInputChange}
-              value={formData.target}
-            />
+            <ModeSelect defaultValue={initialValues.mode} />
+            <TargetSelect defaultValue={initialValues.target} />
           </div>
           <div className="form-control">
             <label className="label text-sm text text-gray-400" htmlFor="name">
@@ -165,8 +143,7 @@ export const WorkoutForm = ({
               name="notes"
               id="notes"
               placeholder="add some notes"
-              value={formData.notes ?? ''}
-              onChange={handleInputChange}
+              defaultValue={initialValues.notes ?? ''}
             />
           </div>
 

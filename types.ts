@@ -26,6 +26,5 @@ export type SuggestionFormData = BaseFormData & {
 };
 
 export type CustomSelectProps = {
-  onChange: (e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
-  value: string;
+  defaultValue: string;
 };
