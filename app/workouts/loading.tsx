@@ -1,4 +1,4 @@
-import WorkoutCardSkeleton from '@/components/CardSkeleton';
+import { WorkoutCardSkeleton } from '@/components/WorkoutCardSkeleton';
 
 const WorkoutLoading = () => {
   return (

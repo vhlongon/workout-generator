@@ -8,6 +8,7 @@ type WorkoutPageProps = {
     id: string;
   };
 };
+
 const WorkoutPage = async ({ params }: WorkoutPageProps) => {
   const { data, error } = await getWorkoutAction(params.id);
 

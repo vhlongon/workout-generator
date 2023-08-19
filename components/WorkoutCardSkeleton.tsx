@@ -1,4 +1,4 @@
-const WorkoutCardSkeleton = () => {
+export const WorkoutCardSkeleton = () => {
   return (
     <div className="card shadow-md w-full p-4 bg-neutral">
       <div className="flex gap-4 items-center mb-4">
@@ -55,5 +55,3 @@ const WorkoutCardSkeleton = () => {
     </div>
   );
 };
-
-export default WorkoutCardSkeleton;
