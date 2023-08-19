@@ -5,7 +5,6 @@ import { getWorkoutSuggestion } from '@/helpers/prompt';
 import { SuggestionFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const generateSuggestionAction = async (
   input: SuggestionFormData,
   mock = false
@@ -29,7 +28,6 @@ export const generateSuggestionAction = async (
     }
 
     if (mock) {
-      await sleep(1000);
       return {
         data: {
           exercises: [
