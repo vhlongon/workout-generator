@@ -40,14 +40,16 @@ const HomePage = () => {
             alt="Robot"
           />
           <div>
-            <h1 className="text-2xl font-bold italic border-l-4 border-secondary p-4">
+            <h1 className="text-2xl font-bold italic border-l-4 border-secondary p-4 text-gray-200">
               {phrase}
             </h1>
-            <div className="max-w-xs">
-              <p className="py-6">
-                This is a closed beta please enter the password to continue.
-              </p>
-              <ProtectForm />
+            <div className="max-w-xs mx-auto lg:ml-0">
+              <div className="flex flex-col max-w-xs">
+                <p className="py-6 text-center lg:text-left text-gray-300">
+                  This is a closed beta please enter the password to continue.
+                </p>
+                <ProtectForm />
+              </div>
             </div>
           </div>
         </div>
