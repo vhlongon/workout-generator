@@ -34,7 +34,7 @@ export const WorkoutCardSkeleton = () => {
         </div>
         <div className="collapse-content">
           <span className="text-sm">
-            <div className="w-32 h-3 bg-base-200 animate-pulse mt-1 animate-bg"></div>
+            <div className="w-32 h-3 bg-base-200 rounded-lg animate-pulse mt-1 animate-bg"></div>
           </span>
         </div>
       </div>
