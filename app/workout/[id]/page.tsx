@@ -2,7 +2,7 @@ import { getWorkoutAction } from '@/actions/getWorkoutAction';
 import { WorkoutForm } from '@/app/create/WorkoutForm';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { formatWorkoutData } from '@/helpers/format';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 type WorkoutParams = {
   id: string;
@@ -11,25 +11,16 @@ type WorkoutPageProps = {
   params: WorkoutParams;
 };
 
-export async function generateMetadata(
-  { params }: WorkoutPageProps,
-  parent?: ResolvingMetadata
-): Promise<Metadata> {
+export const generateMetadata = async ({
+  params,
+}: WorkoutPageProps): Promise<Metadata> => {
   const { id } = params;
-
-  // fetch data
   const { data } = await getWorkoutAction(id);
-
-  // optionally access and extend (rather than replace) parent metadata
-  // const previousImages = (await parent)?.openGraph?.images || [];
 
   return {
     title: data ? `Workout: ${data.name}` : 'Workout not found',
-    openGraph: {
-      // images: ['/some-specific-page-image.jpg', ...previousImages],
-    },
   };
-}
+};
 
 const WorkoutPage = async ({ params }: WorkoutPageProps) => {
   const { data, error } = await getWorkoutAction(params.id);
