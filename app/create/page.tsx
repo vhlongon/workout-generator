@@ -1,6 +1,10 @@
 import { Mode, Target } from '@prisma/client';
 import { SuggestionForm } from './SuggestionForm';
 
+export const metadata = {
+  title: 'Create a workout',
+};
+
 const initialSuggestionData = {
   mode: Mode.HYPERTROPHY,
   target: Target.FULL_BODY,

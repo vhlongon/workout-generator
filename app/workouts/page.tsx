@@ -2,7 +2,16 @@ import { WorkoutCard } from '@/components/WorkoutCard';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await currentUser();
+
+  return {
+    title: user ? `${user.username}'s workouts` : 'Workouts',
+  };
+}
 
 export const revalidate = 0;
 
