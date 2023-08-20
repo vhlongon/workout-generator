@@ -10,13 +10,16 @@ import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 import { NavLink } from './NavLink';
 import { SignOutButton } from './SignOutButton';
-import { usePathname } from 'next/navigation';
-import Head from 'next/head';
-import { headers } from 'next/headers';
+import { isValidProtectPasswordInCookies } from '@/helpers/protect';
 
 export const Header = async () => {
   const { userId } = auth();
   const user = await currentUser();
+  const isAuthorized = isValidProtectPasswordInCookies();
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <header className="navbar bg-base-100 p-4 shadow-xl">
