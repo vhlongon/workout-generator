@@ -10,7 +10,7 @@ const HomeLoading = () => {
 
       <div className="w-full max-w-7xl mx-auto flex justify-center items-center">
         <ul className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4 mx-auto border border-base-200 rounded-2xl p-4">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {Array.from({ length: 3 }).map((_, index) => (
             <li key={index}>
               <div className="collapse collapse-arrow text-base-200 border border-base-200">
                 <input type="checkbox" />
