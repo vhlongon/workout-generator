@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { Header } from '../components/Header';
 import './globals.css';
 import { CSSProperties } from 'react';
+import { headers } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const ultra = Ultra({
@@ -19,11 +20,19 @@ export const metadata: Metadata = {
   description: 'Create workout plans and routines with ease',
 };
 
-export default function RootLayout({
-  children,
-}: {
+const isRoot = () => {
+  const headersList = headers();
+  const pathname = headersList.get('x-invoke-path') || '';
+  return pathname === '/';
+};
+
+type RootLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
+  const isRootPath = isRoot();
+
   return (
     <html lang="en" data-theme="synthwave">
       <ClerkProvider
@@ -41,7 +50,7 @@ export default function RootLayout({
           className={twMerge(inter.className, 'bg-base-100')}
         >
           <div className="flex min-h-[100dvh] flex-col">
-            <Header />
+            {!isRootPath && <Header />}
             <main className="flex w-full flex-grow p-4 mx-auto">
               {children}
             </main>

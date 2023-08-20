@@ -14,17 +14,7 @@ import { usePathname } from 'next/navigation';
 import Head from 'next/head';
 import { headers } from 'next/headers';
 
-const isRoot = () => {
-  const headersList = headers();
-  const pathname = headersList.get('x-invoke-path') || '';
-  return pathname === '/';
-};
-
 export const Header = async () => {
-  if (isRoot()) {
-    return null;
-  }
-
   const { userId } = auth();
   const user = await currentUser();
 
