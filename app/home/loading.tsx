@@ -1,7 +1,7 @@
 const HomeLoading = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center gap-10">
-      <div className="w-72 max-auto h-6 bg-base-200 animate-pulse rounded-lg" />
+      <div className="w-72 max-auto h-6 bg-base-200 animate-pulse rounded-lg mt-32" />
       <div className="w-full flex flex-col items-center gap-6">
         <div className="w-full max-w-lg h-[2px] bg-base-200 animate-pulse rounded-lg" />
         <div className="w-60 max-auto h-4 bg-base-200 animate-pulse rounded-lg" />
