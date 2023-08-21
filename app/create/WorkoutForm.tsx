@@ -1,4 +1,5 @@
 'use client';
+import { deleteExerciseAction } from '@/actions/deleteExerciseAction';
 import { saveWorkoutAction } from '@/actions/saveWorkoutAction';
 import { ConfirmationToast } from '@/components/ConfirmationToast';
 import { ErrorMessage } from '@/components/ErrorMessage';
@@ -8,9 +9,14 @@ import { getErrorMessage, slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { FormMode, FormProps, WorkoutFormData } from '@/types';
+import { MinusCircleIcon } from '@heroicons/react/24/solid';
 import { Mode, Target } from '@prisma/client';
 import { useRouter } from 'next/navigation';
-import { useId, useTransition } from 'react';
+import {
+  useId,
+  experimental_useOptimistic as useOptimistic,
+  useTransition,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type WorkoutFormProps = FormProps<WorkoutFormData> & {
@@ -29,6 +35,12 @@ export const WorkoutForm = ({
   const { error, setError, confirmation, setConfirmation } =
     useConfirmationState();
   const router = useRouter();
+  const [optimisticExercises, deleteOptimisticExercise] = useOptimistic(
+    initialValues.exercises,
+    (state, id: string) => {
+      return state.filter(exercise => exercise.id !== id);
+    }
+  );
 
   const saveWorkout = (e: FormData) => {
     startTransition(async () => {
@@ -43,6 +55,7 @@ export const WorkoutForm = ({
             name: exercise.name,
             sets: Number(e.get(`${slugify(exercise.name)}_sets`)),
             reps: [Number(e.get(`${slugify(exercise.name)}_reps`)) || 0],
+            id: exercise.id,
           })),
         };
 
@@ -65,6 +78,20 @@ export const WorkoutForm = ({
         setError?.(getErrorMessage(error));
       }
     });
+  };
+
+  const handleDeleteExercise = (id?: string) => async () => {
+    if (!id) {
+      return;
+    }
+
+    setError('');
+    deleteOptimisticExercise(id);
+    const { error } = await deleteExerciseAction(id);
+    if (error) {
+      setError(error);
+      router.refresh();
+    }
   };
 
   return (
@@ -92,13 +119,14 @@ export const WorkoutForm = ({
           <table className="table" align="right">
             <thead>
               <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Sets</th>
                 <th>Reps</th>
               </tr>
             </thead>
             <tbody>
-              {initialValues.exercises.map((exercise, index) => {
+              {optimisticExercises.map((exercise, index) => {
                 const repsId = `${slugify(exercise.name)}_reps`;
                 const setsId = `${slugify(exercise.name)}_sets`;
                 const min = exercise.reps[0];
@@ -107,6 +135,15 @@ export const WorkoutForm = ({
 
                 return (
                   <tr key={exercise.name}>
+                    <td>
+                      <button
+                        formAction={handleDeleteExercise(exercise?.id)}
+                        className={twMerge('btn btn-circle btn-xs btn-error')}
+                        type="submit"
+                      >
+                        <MinusCircleIcon className="w-4 h-4" title="Remove" />
+                      </button>
+                    </td>
                     <td>
                       <span className="w-40 flex-grow">{exercise.name}</span>
                     </td>

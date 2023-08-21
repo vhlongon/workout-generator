@@ -34,6 +34,7 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
           {!isPending && <span className="text-error">try again</span>}
           <button
             type="submit"
+            disabled={isPending}
             className={twMerge(
               'btn btn-circle btn-ghost btn-sm cursor-pointer',
               isPending ? 'loading' : ''
@@ -50,6 +51,7 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
 
           <button
             type="submit"
+            disabled={isPending}
             className={twMerge(
               'btn btn-circle btn-ghost btn-sm cursor-pointer'
             )}

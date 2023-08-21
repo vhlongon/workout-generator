@@ -41,10 +41,12 @@ const WorkoutPage = async ({ params }: WorkoutPageProps) => {
     );
   }
 
+  const initialValues = formatWorkoutData(data);
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <WorkoutForm
-        initialValues={formatWorkoutData(data)}
+        initialValues={initialValues}
         buttonText="Update Workout"
         title={data.name}
         mode="update"

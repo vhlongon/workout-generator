@@ -1,4 +1,4 @@
-import { Exercise, Mode, Target } from '@prisma/client';
+import { Mode, Target } from '@prisma/client';
 
 export type FormProps<InitValues> = {
   initialValues: InitValues;
@@ -7,14 +7,21 @@ export type FormProps<InitValues> = {
   onSuccess?: () => void;
 };
 
-type BaseFormData = {
+export type BaseFormData = {
   mode: Mode;
   target: Target;
   notes?: string | null;
   name?: string;
 };
+
+export type ExerciseInput = {
+  name: string;
+  sets: number;
+  reps: number[];
+  id?: string;
+};
 export type WorkoutFormData = BaseFormData & {
-  exercises: Pick<Exercise, 'name' | 'sets' | 'reps'>[];
+  exercises: ExerciseInput[];
 };
 
 export type SuggestionFormData = BaseFormData & {

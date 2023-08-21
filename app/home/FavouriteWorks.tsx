@@ -1,11 +1,11 @@
-import { getFavoriteWorkouts } from '@/actions/getFavouriteWorkoutsAction';
+import { getFavouriteWorkoutsAction } from '@/actions/getFavouriteWorkoutsAction';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { WorkoutCard } from '@/components/WorkoutCard';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
 export const FavouriteWorks = async () => {
-  const { data, error } = await getFavoriteWorkouts();
+  const { data, error } = await getFavouriteWorkoutsAction();
 
   if (error) {
     <div className="w-full max-w-fit mx-auto flex items-center justify-center">

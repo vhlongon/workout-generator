@@ -2,7 +2,7 @@ import { getErrorMessage } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 
-export const getFavoriteWorkouts = async () => {
+export const getFavouriteWorkoutsAction = async () => {
   try {
     const user = await currentUser();
 
