@@ -11,7 +11,7 @@ const initialSuggestionData = {
   totalSets: 12,
 };
 
-const CreateWorkoutPage = () => {
+const CreateWorkoutPage = async () => {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <SuggestionForm
