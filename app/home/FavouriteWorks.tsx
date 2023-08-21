@@ -1,10 +1,17 @@
 import { getFavoriteWorkouts } from '@/actions/getFavouriteWorkoutsAction';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import { WorkoutCard } from '@/components/WorkoutCard';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
 export const FavouriteWorks = async () => {
-  const favouriteWorkouts = await getFavoriteWorkouts();
+  const { data, error } = await getFavoriteWorkouts();
+
+  if (error) {
+    <div className="w-full max-w-fit mx-auto flex items-center justify-center">
+      <ErrorMessage>{error}</ErrorMessage>
+    </div>;
+  }
 
   return (
     <>
@@ -15,10 +22,10 @@ export const FavouriteWorks = async () => {
         </h3>
         <div className="divider mt-1"></div>
       </div>
-      {Boolean(favouriteWorkouts.length) ? (
+      {Boolean(data?.length) ? (
         <div className="flex justify-center">
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-col-4 gap-4 mx-auto border border-base-200 rounded-2xl p-4">
-            {favouriteWorkouts.map(workout => {
+            {data?.map(workout => {
               const { name } = workout;
               return (
                 <li key={workout.id}>

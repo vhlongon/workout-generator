@@ -1,7 +1,7 @@
 'use server';
 
+import { getErrorMessage } from '@/helpers/format';
 import { db } from '@/prisma/client';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
 export const toggleFavouriteAction = async (
   id: string,
@@ -32,7 +32,7 @@ export const toggleFavouriteAction = async (
     return { data: true };
   } catch (error) {
     return {
-      error: (error as PrismaClientValidationError).message,
+      error: getErrorMessage(error),
     };
   }
 };

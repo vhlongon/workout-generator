@@ -1,12 +1,11 @@
 'use server';
 
 import { getUserNameOrId, isWorkoutNameUnique } from '@/helpers/data';
-import { sanitizeInput } from '@/helpers/format';
+import { getErrorMessage, sanitizeInput } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { FormMode, WorkoutFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 import { Exercise } from '@prisma/client';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
 export const saveWorkoutAction = async (
   input: WorkoutFormData,
@@ -144,7 +143,7 @@ export const saveWorkoutAction = async (
     };
   } catch (error) {
     return {
-      error: (error as PrismaClientValidationError).message,
+      error: getErrorMessage(error),
     };
   }
 };

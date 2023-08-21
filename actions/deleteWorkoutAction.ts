@@ -1,4 +1,5 @@
 'use server';
+import { getErrorMessage } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 
@@ -27,7 +28,7 @@ export const deleteWorkoutAction = async (id: string) => {
     return { data: true };
   } catch (error) {
     return {
-      error: (error as Error).message,
+      error: getErrorMessage(error),
     };
   }
 };

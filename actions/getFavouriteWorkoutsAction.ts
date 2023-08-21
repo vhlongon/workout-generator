@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
 
@@ -6,7 +7,9 @@ export const getFavoriteWorkouts = async () => {
     const user = await currentUser();
 
     if (!user) {
-      return [];
+      return {
+        error: 'User not found',
+      };
     }
 
     const email = user.emailAddresses[0].emailAddress;
@@ -26,8 +29,10 @@ export const getFavoriteWorkouts = async () => {
       },
     });
 
-    return workouts;
+    return { data: workouts };
   } catch (error) {
-    return [];
+    return {
+      error: getErrorMessage(error),
+    };
   }
 };

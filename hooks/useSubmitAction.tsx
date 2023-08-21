@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/helpers/format';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
@@ -25,7 +26,7 @@ export const useSubmitAction = <Data = unknown,>({
 
         router.refresh();
       } catch (error) {
-        setError((error as Error).message);
+        setError(getErrorMessage(error));
       }
     });
   };

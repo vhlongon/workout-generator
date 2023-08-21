@@ -1,6 +1,7 @@
 'use server';
 
 import { getUserNameOrId, isWorkoutNameUnique } from '@/helpers/data';
+import { getErrorMessage } from '@/helpers/format';
 import { getWorkoutSuggestion } from '@/helpers/prompt';
 import { SuggestionFormData } from '@/types';
 import { currentUser } from '@clerk/nextjs';
@@ -56,7 +57,7 @@ export const generateSuggestionAction = async (
     return { data: suggestion };
   } catch (error) {
     return {
-      error: (error as Error).message,
+      error: getErrorMessage(error),
     };
   }
 };

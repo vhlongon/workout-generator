@@ -4,6 +4,7 @@ import { ConfirmationToast } from '@/components/ConfirmationToast';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { ModeSelect } from '@/components/ModeSelect';
 import { TargetSelect } from '@/components/TargetSelect';
+import { getErrorMessage } from '@/helpers/format';
 import { getRandomLoadingPhrase } from '@/helpers/value';
 import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { FormProps, SuggestionFormData } from '@/types';
@@ -56,7 +57,7 @@ export const SuggestionForm = ({
 
         setWorkoutFormData({ ...res.data, ...formData });
       } catch (error) {
-        setError?.((error as Error).message);
+        setError?.(getErrorMessage(error));
       }
     });
   };

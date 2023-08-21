@@ -1,6 +1,6 @@
+import { getErrorMessage } from '@/helpers/format';
 import { db } from '@/prisma/client';
 import { currentUser } from '@clerk/nextjs';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
 export const getWorkoutAction = async (id: string) => {
   const user = await currentUser();
@@ -36,7 +36,7 @@ export const getWorkoutAction = async (id: string) => {
     return { data: workout };
   } catch (error) {
     return {
-      error: (error as PrismaClientValidationError).message,
+      error: getErrorMessage(error),
     };
   }
 };

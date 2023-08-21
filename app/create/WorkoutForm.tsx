@@ -4,7 +4,7 @@ import { ConfirmationToast } from '@/components/ConfirmationToast';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { ModeSelect } from '@/components/ModeSelect';
 import { TargetSelect } from '@/components/TargetSelect';
-import { slugify } from '@/helpers/format';
+import { getErrorMessage, slugify } from '@/helpers/format';
 import { getMediumValue } from '@/helpers/value';
 import { useConfirmationState } from '@/hooks/useConfirmationState';
 import { FormMode, FormProps, WorkoutFormData } from '@/types';
@@ -62,7 +62,7 @@ export const WorkoutForm = ({
         onSuccess?.();
         router.refresh();
       } catch (error) {
-        setError?.((error as Error).message);
+        setError?.(getErrorMessage(error));
       }
     });
   };
