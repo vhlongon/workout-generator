@@ -22,7 +22,7 @@ export const FavouriteButton = ({ isFavourite, id }: FavouriteButtonProps) => {
 
   const { isPending, error, handleSubmit } = useSubmitAction({
     action: async () => {
-      addOptimisticFavourite(true);
+      addOptimisticFavourite(!isFavourite);
       return toggleFavouriteAction(id, isFavourite);
     },
   });
