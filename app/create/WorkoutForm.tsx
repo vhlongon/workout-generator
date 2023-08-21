@@ -35,6 +35,7 @@ export const WorkoutForm = ({
   const { error, setError, confirmation, setConfirmation } =
     useConfirmationState();
   const router = useRouter();
+
   const [optimisticExercises, deleteOptimisticExercise] = useOptimistic(
     initialValues.exercises,
     (state, id: string) => {

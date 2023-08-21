@@ -26,6 +26,7 @@ export type WorkoutFormData = BaseFormData & {
 
 export type SuggestionFormData = BaseFormData & {
   totalSets: number;
+  bodyWeightOnly: boolean;
 };
 
 export type CustomSelectProps = {

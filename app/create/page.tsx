@@ -9,6 +9,7 @@ const initialSuggestionData = {
   mode: Mode.HYPERTROPHY,
   target: Target.FULL_BODY,
   totalSets: 12,
+  bodyWeightOnly: false,
 };
 
 const CreateWorkoutPage = async () => {

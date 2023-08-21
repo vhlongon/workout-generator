@@ -41,6 +41,7 @@ export const SuggestionForm = ({
           target: data.get('target') as Target,
           totalSets: Number(data.get('totalSets')),
           name: data.get('name') as string,
+          bodyWeightOnly: Boolean(data.get('bodyWeightOnly')),
         };
 
         const res = await generateSuggestionAction(formData);
@@ -102,6 +103,9 @@ export const SuggestionForm = ({
         <div className="flex gap-4 w-full justify-between">
           <ModeSelect defaultValue={initialValues.mode} />
           <TargetSelect defaultValue={initialValues.target} />
+        </div>
+
+        <div className="flex gap-4 w-full justify-between">
           <div className="form-control">
             <label
               className="label text-sm text text-gray-400"
@@ -117,6 +121,22 @@ export const SuggestionForm = ({
               id="totalSets"
               required
               defaultValue={initialValues.totalSets}
+            />
+          </div>
+
+          <div className="form-control flex items-end">
+            <label
+              className="label text-sm text-gray-400"
+              htmlFor="bodyWeightOnly"
+            >
+              Bodyweight only
+            </label>
+            <input
+              className="checkbox"
+              type="checkbox"
+              name="bodyWeightOnly"
+              id="bodyWeightOnly"
+              defaultChecked={initialValues.bodyWeightOnly}
             />
           </div>
         </div>

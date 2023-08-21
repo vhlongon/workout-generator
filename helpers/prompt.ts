@@ -39,12 +39,15 @@ const generateWorkoutPrompt = ({
   mode,
   target,
   totalSets,
+  bodyWeightOnly,
 }: SuggestionFormData): string => {
   if (!target) {
     throw new Error('Specific muscle group is required');
   }
 
-  const prompt = `Generate a ${mode} workout routine for a ${target} workout. The workout should include a variety of exercises targeting all major muscles in the selected area. The total number of sets for all exercises combined should be ${totalSets} or less. Please provide the routine in the following format:\n\n| Exercise Name | Number of Sets | Number of Reps |\n| ------------- | -------------- | -------------- |\n and always include the header row in the response. You can also include any additional notes below the table.\n\n`;
+  const prompt = `Generate a ${mode} workout routine for a ${target} workout. The workout should include a variety of exercises targeting all major muscles in the selected area ${
+    bodyWeightOnly ? 'using only bodyweight' : ''
+  }. The total number of sets for all exercises combined should be ${totalSets} or less. Please provide the routine in the following format:\n\n| Exercise Name | Number of Sets | Number of Reps |\n| ------------- | -------------- | -------------- |\n and always include the header row in the response. You can also include any additional notes below the table.\n\n`;
 
   return prompt;
 };
